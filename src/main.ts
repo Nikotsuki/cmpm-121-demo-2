@@ -11,7 +11,7 @@ app.append(header);
 const canvas: HTMLCanvasElement = document.querySelector("#canvas")!;
 const ctx = canvas.getContext("2d")!;
 ctx.fillStyle = "black";
-ctx.fillRect(6, 6, 260, 260);
+ctx.fillRect(3, 3, 270, 270);
 ctx.fillStyle = "white";
 ctx.fillRect(10, 10, 256, 256);
 
