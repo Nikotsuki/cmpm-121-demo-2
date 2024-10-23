@@ -13,6 +13,6 @@ const ctx = canvas.getContext("2d")!;
 ctx.fillStyle = "black";
 ctx.fillRect(0, 0, 266, 266);
 ctx.fillStyle = "white";
-ctx.fillRect(8, 8, 256, 256);
+ctx.fillRect(4, 4, 256, 256);
 
 
