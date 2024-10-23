@@ -62,8 +62,8 @@ h1 {
   color: #888;
 }
 
-canvas{
-  border-radius: 30px;
+#canvas{
+  border-radius: 10% / 50%;
 }
 
 button {
