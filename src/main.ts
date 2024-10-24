@@ -36,7 +36,8 @@ function dispatchDrawingChangedEvent() {
 canvas.addEventListener('drawing-changed', () => {
   if (ctx){
     //console.log("print");
-    ctx.clearRect(5, 5, 256, 256);
+    ctx.fillStyle = "white";
+    ctx.fillRect(5, 5, 256, 256);
     for(const line of lines_array){
         ctx.beginPath();
         ctx.strokeStyle = "black";
