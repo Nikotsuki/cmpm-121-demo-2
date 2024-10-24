@@ -73,6 +73,7 @@ clear.addEventListener("click", () => {
 // undo button
 const undo: HTMLButtonElement = document.querySelector("#undo")!;
 undo.addEventListener("click", () => {
+  console.log(lines.length);
   if (lines.length != 0){
     console.log("hi");
     const undo_point: Point[] = lines.pop()!;
