@@ -74,6 +74,7 @@ clear.addEventListener("click", () => {
 const undo: HTMLButtonElement = document.querySelector("#undo")!;
 undo.addEventListener("click", () => {
   if (lines.length != 0){
+    console.log("hi");
     const undo_point: Point[] = lines.pop()!;
     redo_stack.push(undo_point);
     dispatchDrawingChangedEvent();
