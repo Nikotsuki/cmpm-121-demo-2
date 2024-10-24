@@ -24,7 +24,7 @@ function handleMouseDown(event: MouseEvent) {
 
 
 function handleMouseMove(event: MouseEvent) {
-    //if (event.buttons !== 1) return; // Only draw when left mouse button is pressed
+    if (event.buttons !== 1) return; // Only draw when left mouse button is pressed
 
     const point: Point = { x: event.offsetX, y: event.offsetY };
     currentLine.push(point);
