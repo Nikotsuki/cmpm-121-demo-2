@@ -7,55 +7,65 @@ const app = document.querySelector<HTMLDivElement>("#app")!;
 header.innerHTML = APP_NAME;
 app.append(header);
 
-let isDrawing = false;
-let x = 0;
-let y = 0;
-
 const canvas: HTMLCanvasElement = document.querySelector("#canvas")!;
 const ctx = canvas.getContext("2d")!;
 ctx.fillStyle = "white";
 ctx.fillRect(5, 5, 256, 256);
 
-canvas.addEventListener("mousedown", (e) => {
-  x = e.offsetX;
-  y = e.offsetY;
-  isDrawing = true;
+type Point = { x: number, y: number };
+let lines: Point[][] = []; 
+let currentLine: Point[] = []; 
+
+
+function handleMouseDown(event: MouseEvent) {
+    currentLine = [];
+    lines.push(currentLine);
+}
+
+
+function handleMouseMove(event: MouseEvent) {
+    if (event.buttons !== 1) return;
+
+    const point: Point = { x: event.offsetX, y: event.offsetY };
+    currentLine.push(point);
+    dispatchDrawingChangedEvent(); 
+}
+
+
+function dispatchDrawingChangedEvent() {
+    const event = new CustomEvent('drawing-changed');
+    canvas.dispatchEvent(event);
+}
+
+
+canvas.addEventListener('drawing-changed', () => {
+    if (ctx) {
+        ctx.fillStyle = "white";
+        ctx.fillRect(5, 5, 256, 256);
+        for(const line of lines){
+            ctx.beginPath();
+            for (let i = 0; i < line.length; i++) {
+                const point = line[i];
+                if (i === 0) {
+                    ctx.moveTo(point.x, point.y);
+                } else {
+                    ctx.lineTo(point.x, point.y);
+                }
+            }
+            ctx.stroke();
+        }
+    }
 });
 
-canvas.addEventListener("mousemove", (e) => {
-  if (isDrawing) {
-    ctx.beginPath();
-    ctx.strokeStyle = "black";
-    ctx.lineWidth = 1;
-    ctx.moveTo(x, y);
-    ctx.lineTo(e.offsetX, e.offsetY);
-    ctx.stroke();
-    ctx.closePath();
-    x = e.offsetX;
-    y = e.offsetY;
-  }
-});
 
-document.addEventListener("mouseup", (e) => {
-  if (isDrawing) {
-    ctx.beginPath();
-    ctx.strokeStyle = "black";
-    ctx.lineWidth = 1;
-    ctx.moveTo(x, y);
-    ctx.lineTo(e.offsetX, e.offsetY);
-    ctx.stroke();
-    ctx.closePath();
-    x = 0;
-    y = 0;
-    isDrawing = false;
-  }
-});
+canvas.addEventListener('mousedown', handleMouseDown);
+canvas.addEventListener('mousemove', handleMouseMove);
 
 
-
-
+// clear button
 const clear: HTMLButtonElement = document.querySelector("#clear")!;
 clear.addEventListener("click", () => {
   ctx.fillStyle = "white";
   ctx.fillRect(5, 5, 256, 256);
+  lines = [];
 });
