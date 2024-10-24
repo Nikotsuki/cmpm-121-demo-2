@@ -36,7 +36,7 @@ function dispatchDrawingChangedEvent() {
 canvas.addEventListener('drawing-changed', () => {
   ctx.fillStyle = "white";
   ctx.fillRect(5, 5, 256, 256);
-  for(const line of lines_array){
+  lines_array.forEach(line => {
       ctx.beginPath();
       for (let i = 0; i < line.length; i++) {
           const point = line[i];
@@ -47,7 +47,7 @@ canvas.addEventListener('drawing-changed', () => {
           }
       }
       ctx.stroke();
-  }
+    });
 });
 
 canvas.addEventListener('mousedown', handleMouseDown);
