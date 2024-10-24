@@ -27,6 +27,10 @@ canvas.addEventListener("mousedown", () => {
   lines_array.push(currentLine);
 });
 
+canvas.addEventListener("mouseup", () => {
+  dispatchDrawingChangedEvent();
+});
+
 function handleMouseMove(event: MouseEvent)  {
   const point: Point = { x: event.clientX, y: event.clientY };
   currentLine.push(point);
