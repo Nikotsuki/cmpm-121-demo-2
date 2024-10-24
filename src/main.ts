@@ -15,6 +15,7 @@ ctx.fillRect(5, 5, 256, 256);
 type Point = { x: number, y: number };
 let lines: Point[][] = []; 
 let currentLine: Point[] = []; 
+const redo_stack: Point[][] = [];
 
 
 function handleMouseDown(event: MouseEvent) {
@@ -68,4 +69,24 @@ clear.addEventListener("click", () => {
   ctx.fillStyle = "white";
   ctx.fillRect(5, 5, 256, 256);
   lines = [];
+});
+
+// undo button
+const undo: HTMLButtonElement = document.querySelector("#undo")!;
+undo.addEventListener("click", () => {
+  if (lines.length != 0){
+    const undo_point: Point[] = lines.pop()!;
+    redo_stack.push(undo_point);
+    dispatchDrawingChangedEvent();
+  }
+});
+
+// redo button
+const redo: HTMLButtonElement = document.querySelector("#redo")!;
+redo.addEventListener("click", () => {
+  if (redo_stack.length != 0){
+    const redo_point: Point[] = redo_stack.pop()!;
+    lines.push(redo_point);
+    dispatchDrawingChangedEvent();
+  }
 });
