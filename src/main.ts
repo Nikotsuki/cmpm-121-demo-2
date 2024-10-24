@@ -73,7 +73,7 @@ clear.addEventListener("click", () => {
 // undo button
 const undo: HTMLButtonElement = document.querySelector("#undo")!;
 undo.addEventListener("click", () => {
-  if (lines){
+  if (lines.length != 0){
     const undo_point: Point[] = lines.pop()!;
     redo_stack.push(undo_point);
     dispatchDrawingChangedEvent();
@@ -83,7 +83,7 @@ undo.addEventListener("click", () => {
 // redo button
 const redo: HTMLButtonElement = document.querySelector("#redo")!;
 redo.addEventListener("click", () => {
-  if (redo_stack){
+  if (redo_stack.length != 0){
     const redo_point: Point[] = redo_stack.pop()!;
     lines.push(redo_point);
     dispatchDrawingChangedEvent();
