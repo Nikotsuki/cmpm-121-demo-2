@@ -37,8 +37,10 @@ canvas.addEventListener('drawing-changed', () => {
   console.log("print");
   ctx.fillStyle = "white";
   ctx.fillRect(5, 5, 256, 256);
-  lines_array.forEach(line => {
+  for(const line of lines_array){
       ctx.beginPath();
+      ctx.strokeStyle = "black";
+      ctx.lineWidth = 1;
       for (let i = 0; i < line.length; i++) {
           const point = line[i];
           if (i === 0) {
@@ -48,7 +50,8 @@ canvas.addEventListener('drawing-changed', () => {
           }
       }
       ctx.stroke();
-    });
+    }
+  ctx.closePath();
 });
 
 canvas.addEventListener('mousedown', handleMouseDown);
