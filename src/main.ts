@@ -42,7 +42,7 @@ canvas.addEventListener('drawing-changed', () => {
     if (ctx) {
         ctx.fillStyle = "white";
         ctx.fillRect(5, 5, 256, 256);
-        lines.forEach(line => {
+        for(const line of lines){
             ctx.beginPath();
             for (let i = 0; i < line.length; i++) {
                 const point = line[i];
@@ -53,7 +53,7 @@ canvas.addEventListener('drawing-changed', () => {
                 }
             }
             ctx.stroke();
-        });
+        }
     }
 });
 
