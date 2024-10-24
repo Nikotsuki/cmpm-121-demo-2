@@ -9,7 +9,7 @@ app.append(header);
 
 type Point = { x: number, y: number };
 
-const lines_array: Point[][] = [];
+let  lines_array: Point[][] = [];
 let currentLine: Point[] = []; 
 
 const canvas: HTMLCanvasElement = document.querySelector("#canvas")!;
@@ -25,7 +25,7 @@ ctx.fillRect(5, 5, 256, 256);
 canvas.addEventListener("mousedown", () => {
   currentLine = [];
   lines_array.push(currentLine);
-})
+});
 
 function handleMouseMove(event: MouseEvent)  {
   const point: Point = { x: event.clientX, y: event.clientY };
@@ -71,6 +71,7 @@ const clear: HTMLButtonElement = document.querySelector("#clear")!;
 clear.addEventListener("click", () => {
   ctx.fillStyle = "white";
   ctx.fillRect(5, 5, 256, 256);
+  lines_array = [];
 });
 
 
