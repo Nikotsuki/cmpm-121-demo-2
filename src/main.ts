@@ -34,25 +34,26 @@ function dispatchDrawingChangedEvent() {
 }
 
 canvas.addEventListener('drawing-changed', () => {
-  //console.log("print");
-  ctx.fillStyle = "white";
-  ctx.fillRect(5, 5, 256, 256);
-  for(const line of lines_array){
-      ctx.beginPath();
-      ctx.strokeStyle = "black";
-      ctx.lineWidth = 1;
-      for (let i = 0; i < line.length; i++) {
-          const point = line[i];
-          console.log(point);
-          if (i === 0) {
-              ctx.moveTo(point.x, point.y);
-          } else {
-              ctx.lineTo(point.x, point.y);
-              ctx.stroke();
-          }
+  if (ctx){
+    //console.log("print");
+    ctx.clearRect(5, 5, 256, 256);
+    for(const line of lines_array){
+        ctx.beginPath();
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 1;
+        for (let i = 0; i < line.length; i++) {
+            const point = line[i];
+            console.log(point);
+            if (i === 0) {
+                ctx.moveTo(point.x, point.y);
+            } else {
+                ctx.lineTo(point.x, point.y);
+                ctx.stroke();
+            }
+        }
       }
-    }
-  ctx.closePath();
+    ctx.closePath();
+  }
 });
 
 canvas.addEventListener('mousedown', handleMouseDown);
