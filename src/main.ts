@@ -17,12 +17,12 @@ const ctx = canvas.getContext("2d")!;
 ctx.fillStyle = "white";
 ctx.fillRect(5, 5, 256, 256);
 
-function handleMouseDown(_event: MouseEvent) {
+function handleMouseMove(_event: MouseEvent) {
   currentLine = [];
   lines_array.push(currentLine);
 }
 
-function handleMouseMove(event: MouseEvent)  {
+function handleMouseDown(event: MouseEvent)  {
   const point: Point = { x: event.clientX, y: event.clientY };
   currentLine.push(point);
   dispatchDrawingChangedEvent();
