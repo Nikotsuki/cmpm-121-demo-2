@@ -40,7 +40,8 @@ function dispatchDrawingChangedEvent() {
 // Event listener to redraw the canvas
 canvas.addEventListener('drawing-changed', () => {
     if (ctx) {
-        ctx.clearRect(5, 5, canvas.width, canvas.height); // Clear canvas
+        ctx.fillStyle = "white";
+        ctx.fillRect(5, 5, 256, 256);
         lines.forEach(line => {
             ctx.beginPath();
             for (let i = 0; i < line.length; i++) {
