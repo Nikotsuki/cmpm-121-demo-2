@@ -34,6 +34,7 @@ function dispatchDrawingChangedEvent() {
 }
 
 canvas.addEventListener('drawing-changed', () => {
+  console.log("print");
   ctx.fillStyle = "white";
   ctx.fillRect(5, 5, 256, 256);
   lines_array.forEach(line => {
