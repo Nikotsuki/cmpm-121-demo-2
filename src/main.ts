@@ -43,6 +43,7 @@ canvas.addEventListener('drawing-changed', () => {
       ctx.lineWidth = 1;
       for (let i = 0; i < line.length; i++) {
           const point = line[i];
+          console.log(point);
           if (i === 0) {
               ctx.moveTo(point.x, point.y);
           } else {
