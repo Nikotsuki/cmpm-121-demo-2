@@ -17,12 +17,12 @@ const ctx = canvas.getContext("2d")!;
 ctx.fillStyle = "white";
 ctx.fillRect(5, 5, 256, 256);
 
-function handleMouseMove(_event: MouseEvent) {
+function handleMouseDown(_event: MouseEvent) {
   currentLine = [];
   lines_array.push(currentLine);
 }
 
-function handleMouseDown(event: MouseEvent)  {
+function handleMouseMove(event: MouseEvent)  {
   const point: Point = { x: event.clientX, y: event.clientY };
   currentLine.push(point);
   dispatchDrawingChangedEvent();
@@ -34,7 +34,7 @@ function dispatchDrawingChangedEvent() {
 }
 
 canvas.addEventListener('drawing-changed', () => {
-  console.log("print");
+  //console.log("print");
   ctx.fillStyle = "white";
   ctx.fillRect(5, 5, 256, 256);
   for(const line of lines_array){
@@ -47,15 +47,16 @@ canvas.addEventListener('drawing-changed', () => {
               ctx.moveTo(point.x, point.y);
           } else {
               ctx.lineTo(point.x, point.y);
+              ctx.stroke();
           }
       }
-      ctx.stroke();
     }
   ctx.closePath();
 });
 
 canvas.addEventListener('mousedown', handleMouseDown);
 canvas.addEventListener('mousemove', handleMouseMove);
+
 
 // clear button
 const clear: HTMLButtonElement = document.querySelector("#clear")!;
