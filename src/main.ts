@@ -15,7 +15,7 @@ ctx.fillRect(5, 5, 256, 256);
 type Point = { x: number, y: number };
 let lines: Marker_line[] = []; 
 let currentLine: Marker_line | null = null;
-const redo_stack: Marker_line[] = [];
+let redo_stack: Marker_line[] = [];
 
 interface Displayable {
   display(context: CanvasRenderingContext2D): void;
@@ -65,6 +65,7 @@ clear.addEventListener("click", () => {
   ctx.fillStyle = "white";
   ctx.fillRect(5, 5, 256, 256);
   lines = [];
+  redo_stack = [];
 });
 
 // undo button
