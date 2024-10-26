@@ -75,7 +75,9 @@ clear.addEventListener("click", () => {
 const undo: HTMLButtonElement = document.querySelector("#undo")!;
 undo.addEventListener("click", () => {
   if (lines.length != 0){
+    console.log(lines.length);
     const undo_line: Marker_line = lines.pop()!;
+    console.log(lines.length);
     redo_stack.push(undo_line);
     dispatchDrawingChangedEvent();
   }
