@@ -29,9 +29,7 @@ function handleMouseDown(event: MouseEvent) {
 
 function handleMouseMove(event: MouseEvent) {
   if (currentLine && event.buttons === 1){
-
     currentLine.drag(event.offsetX, event.offsetY);
-    // Clear and redraw the canvas, or optimize by incrementally drawing
     currentLine.display(ctx);
   }
 }
@@ -93,6 +91,7 @@ redo.addEventListener("click", () => {
   }
 });
 
+// Marker Class
 class Marker_line implements Displayable{
 
   public line: Point[] = [];
@@ -108,7 +107,7 @@ class Marker_line implements Displayable{
   display(ctx: CanvasRenderingContext2D): void {
     if (this.line.length === 0) return;
     ctx.beginPath();
-    ctx.moveTo(this.line[0].x, this.line[0].y); // Move to start point
+    ctx.moveTo(this.line[0].x, this.line[0].y);
     for (const point of this.line) {
         ctx.lineTo(point.x, point.y);
     }
