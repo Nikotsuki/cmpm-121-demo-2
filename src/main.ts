@@ -39,7 +39,7 @@ function handleMouseMove(event: MouseEvent) {
 canvas.addEventListener('mouseup', () => {
   // Finalize the line on mouseup
   lines.push(currentLine);
-  currentLine.line = [];
+  currentLine = null!;
 });
 
 canvas.addEventListener('mousedown', handleMouseDown);
