@@ -102,8 +102,7 @@ class Marker_line implements Displayable{
   }
   
   public drag(x: number, y: number){
-    const new_p: Point = { x, y };
-    this.line.push(new_p);
+    this.line.push({x, y});
   }
 
   display(ctx: CanvasRenderingContext2D): void {
@@ -117,6 +116,6 @@ class Marker_line implements Displayable{
     ctx.lineWidth = 1;
     ctx.stroke();
     ctx.closePath();
-}
+  }
 
 }
