@@ -32,8 +32,6 @@ function handleMouseMove(event: MouseEvent) {
 
     currentLine.drag(event.offsetX, event.offsetY);
     // Clear and redraw the canvas, or optimize by incrementally drawing
-    ctx.fillStyle = "white";
-    ctx.fillRect(5, 5, 256, 256);
     currentLine.display(ctx);
     lines.push(currentLine);
   }
@@ -116,6 +114,7 @@ class Marker_line implements Displayable{
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 1;
     ctx.stroke();
+    ctx.closePath();
 }
 
 }
