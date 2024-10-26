@@ -95,7 +95,7 @@ redo.addEventListener("click", () => {
 
 class Marker_line implements Displayable{
 
-  private line: { x: number, y: number }[] = [];
+  public line: Point[] = [];
 
   constructor(init_x: number, init_y: number) {
     this.line.push({x: init_x, y: init_y});
