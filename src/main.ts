@@ -14,7 +14,7 @@ ctx.fillRect(5, 5, 256, 256);
 
 type Point = { x: number, y: number };
 let lines: Marker_line[] = []; 
-let currentLine: Marker_line | null = null;
+let currentLine: Marker_line;
 let redo_stack: Marker_line[] = [];
 
 interface Displayable {
@@ -33,13 +33,13 @@ function handleMouseMove(event: MouseEvent) {
     currentLine.drag(event.offsetX, event.offsetY);
     // Clear and redraw the canvas, or optimize by incrementally drawing
     currentLine.display(ctx);
-    lines.push(currentLine);
   }
 }
 
 canvas.addEventListener('mouseup', () => {
   // Finalize the line on mouseup
-  currentLine = null;
+  lines.push(currentLine);
+  currentLine.line = [];
 });
 
 canvas.addEventListener('mousedown', handleMouseDown);
