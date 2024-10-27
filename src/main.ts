@@ -17,22 +17,23 @@ let lines: Marker_line[] = [];
 let currentLine: Marker_line;
 let redo_stack: Marker_line[] = [];
 let thickness: number = 1;
+let mouse_cursor: Cursor;
 
 interface Displayable {
   display(context: CanvasRenderingContext2D): void;
 }
 
-
 function handleMouseDown(event: MouseEvent) {
   currentLine = new Marker_line(event.offsetX, event.offsetY);
 }
 
-
 function handleMouseMove(event: MouseEvent) {
+  mouse_cursor = new Cursor(event.offsetX, event.offsetY);
   if (currentLine && event.buttons === 1){
     currentLine.drag(event.offsetX, event.offsetY);
     currentLine.display(ctx);
   }
+  dispatchToolMovedEvent();
 }
 
 canvas.addEventListener('mouseup', () => {
@@ -50,6 +51,11 @@ function dispatchDrawingChangedEvent() {
   canvas.dispatchEvent(event);
 }
 
+function dispatchToolMovedEvent(){
+  const event = new CustomEvent('tool-moved');
+  canvas.dispatchEvent(event);
+}
+
 
 canvas.addEventListener('drawing-changed', () => {
   if (ctx) {
@@ -58,6 +64,15 @@ canvas.addEventListener('drawing-changed', () => {
       for(const line of lines){
           line.display(ctx);
       }
+  }
+});
+
+canvas.addEventListener('tool-moved', () =>{
+  if (ctx) {
+    ctx.fillStyle = "white";
+    ctx.fillRect(5, 5, 256, 256);
+    mouse_cursor.display(ctx);
+    dispatchDrawingChangedEvent();
   }
 });
 
@@ -103,6 +118,25 @@ const thin: HTMLButtonElement = document.querySelector("#thin")!;
 thin.addEventListener("click", () => {
   thickness = 1;
 });
+
+class Cursor implements Displayable{
+
+  private init_x: number = 0;
+  private init_y: number = 0;
+
+  constructor(_x: number, _y: number){
+    this.init_x = _x;
+    this.init_y = _y;
+  }
+
+  display(ctx: CanvasRenderingContext2D): void {
+    ctx.fillStyle = "white";
+    ctx.arc(this.init_x, this.init_y, thickness/2, 0, 2 * Math.PI, true);
+    ctx.stroke();
+  }
+
+}
+
 
 // Marker Class
 class Marker_line implements Displayable{
