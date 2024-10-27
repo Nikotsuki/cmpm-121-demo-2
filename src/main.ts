@@ -138,6 +138,7 @@ class Cursor implements Displayable {
     this.y = y;
   }
   display(ctx: CanvasRenderingContext2D): void {
+    ctx.fillStyle = "#000000";
     const size = thickness * 5;
     ctx.font = size + "px monospace";
     ctx.fillText("o", this.x - 8, this.y + 16);
