@@ -45,7 +45,7 @@ function handleMouseMove(event: MouseEvent) {
 }
 
 canvas.addEventListener('mouseup', () => {
-  //lines.push(currentLine);
+  lines.push(currentLine!);
   currentLine = null;
   notify('drawing-changed');
 });
