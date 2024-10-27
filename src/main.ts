@@ -24,20 +24,24 @@ interface Displayable {
 }
 
 function handleMouseDown(event: MouseEvent) {
-  currentLine = new Marker_line(event.offsetX, event.offsetY);
+  currentLine = new Marker_line(event.offsetX, event.offsetY)
 }
 
 function handleMouseMove(event: MouseEvent) {
-  mouse_cursor = new Cursor(event.offsetX, event.offsetY);
+  if (!mouse_cursor){
+    mouse_cursor = new Cursor(event.offsetX, event.offsetY);
+  }
   if (currentLine && event.buttons === 1){
     currentLine.drag(event.offsetX, event.offsetY);
     currentLine.display(ctx);
   }
-  dispatchToolMovedEvent();
+  if (mouse_cursor.cursor_line.length >= 1){
+    mouse_cursor.add_dot(event.offsetX, event.offsetY);
+    dispatchToolMovedEvent();
+  }
 }
 
 canvas.addEventListener('mouseup', () => {
-  // Finalize the line on mouseup
   lines.push(currentLine);
   currentLine = null!;
 });
@@ -69,10 +73,7 @@ canvas.addEventListener('drawing-changed', () => {
 
 canvas.addEventListener('tool-moved', () =>{
   if (ctx) {
-    ctx.fillStyle = "white";
-    ctx.fillRect(5, 5, 256, 256);
     mouse_cursor.display(ctx);
-    dispatchDrawingChangedEvent();
   }
 });
 
@@ -119,22 +120,25 @@ thin.addEventListener("click", () => {
   thickness = 1;
 });
 
+//Cursor Class
 class Cursor implements Displayable{
 
-  private init_x: number = 0;
-  private init_y: number = 0;
+  public cursor_line: Point[] = [];
 
-  constructor(_x: number, _y: number){
-    this.init_x = _x;
-    this.init_y = _y;
+  constructor(init_x: number, init_y: number) {
+    this.cursor_line.push({x: init_x, y: init_y});
+  }
+
+  public add_dot(x: number, y: number){
+    this.cursor_line.push({x, y});
   }
 
   display(ctx: CanvasRenderingContext2D): void {
+    const dot: Point = this.cursor_line[0];
     ctx.fillStyle = "white";
-    ctx.arc(this.init_x, this.init_y, thickness/2, 0, 2 * Math.PI, true);
+    ctx.arc(dot.x, dot.y, thickness/2, 0, 2 * Math.PI, true);
     ctx.stroke();
   }
-
 }
 
 
