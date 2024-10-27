@@ -62,6 +62,11 @@ canvas.addEventListener("mouseenter", (e) => {
   notify("tool-moved");
 });
 
+canvas.addEventListener("mouseenter", (e) => {
+  Marker_cursor = new Cursor(e.offsetX, e.offsetY);
+  notify("cursor-changed");
+});
+
 canvas.addEventListener('mousedown', handleMouseDown);
 canvas.addEventListener('mousemove', handleMouseMove);
 
@@ -126,10 +131,24 @@ thin.addEventListener("click", () => {
   thickness = 2;
 });
 
-canvas.addEventListener("mouseenter", (e) => {
-  Marker_cursor = new Cursor(e.offsetX, e.offsetY);
-  notify("cursor-changed");
+// woozy button
+const woozy: HTMLButtonElement = document.querySelector("#woozy")!;
+woozy.addEventListener("click", () => {
+  thickness = 2;
 });
+
+// moai button
+const moai: HTMLButtonElement = document.querySelector("#moai")!;
+moai.addEventListener("click", () => {
+  thickness = 2;
+});
+
+// china button
+const china: HTMLButtonElement = document.querySelector("#china")!;
+china.addEventListener("click", () => {
+  thickness = 2;
+});
+
 
 //Cursor Class
 class Cursor implements Displayable {
