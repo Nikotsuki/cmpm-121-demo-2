@@ -164,15 +164,14 @@ class Marker_line implements Displayable{
 
   display(ctx: CanvasRenderingContext2D): void {
     if (this.line.length === 0) return;
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = this.marker_thickness;
     ctx.beginPath();
     ctx.moveTo(this.line[0].x, this.line[0].y);
     for (const point of this.line) {
         ctx.lineTo(point.x, point.y);
     }
-    ctx.strokeStyle = 'black';
-    ctx.lineWidth = this.marker_thickness;
     ctx.stroke();
-    ctx.closePath();
   }
 
 }
