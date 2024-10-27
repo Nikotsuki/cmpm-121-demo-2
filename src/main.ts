@@ -16,6 +16,7 @@ type Point = { x: number, y: number };
 let lines: Marker_line[] = []; 
 let currentLine: Marker_line;
 let redo_stack: Marker_line[] = [];
+let thickness: number = 1;
 
 interface Displayable {
   display(context: CanvasRenderingContext2D): void;
@@ -91,6 +92,18 @@ redo.addEventListener("click", () => {
   }
 });
 
+// thick button
+const thick: HTMLButtonElement = document.querySelector("#thick")!;
+thick.addEventListener("click", () => {
+  thickness = 6;
+});
+
+// thin button
+const thin: HTMLButtonElement = document.querySelector("#thin")!;
+thin.addEventListener("click", () => {
+  thickness = 1;
+});
+
 // Marker Class
 class Marker_line implements Displayable{
 
@@ -112,7 +125,7 @@ class Marker_line implements Displayable{
         ctx.lineTo(point.x, point.y);
     }
     ctx.strokeStyle = 'black';
-    ctx.lineWidth = 1;
+    ctx.lineWidth = thickness;
     ctx.stroke();
     ctx.closePath();
   }
