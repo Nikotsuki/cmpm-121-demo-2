@@ -7,20 +7,27 @@ const app = document.querySelector<HTMLDivElement>("#app")!;
 header.innerHTML = APP_NAME;
 app.append(header);
 
+
 const canvas: HTMLCanvasElement = document.querySelector("#canvas")!;
 const ctx = canvas.getContext("2d")!;
 ctx.fillStyle = "white";
 ctx.fillRect(5, 5, 256, 256);
+
+canvas.style.cursor = "none";
 
 type Point = { x: number, y: number };
 let lines: Marker_line[] = []; 
 let currentLine: Marker_line;
 let redo_stack: Marker_line[] = [];
 let thickness: number = 1;
-let mouse_cursor: Cursor;
+let Marker_cursor: Cursor | null = null;
 
 interface Displayable {
   display(context: CanvasRenderingContext2D): void;
+}
+
+function notify(name: string) {
+  canvas.dispatchEvent(new Event(name));
 }
 
 function handleMouseDown(event: MouseEvent) {
@@ -28,16 +35,11 @@ function handleMouseDown(event: MouseEvent) {
 }
 
 function handleMouseMove(event: MouseEvent) {
-  if (!mouse_cursor){
-    mouse_cursor = new Cursor(event.offsetX, event.offsetY);
-  }
+  Marker_cursor = new Cursor(event.offsetX, event.offsetY);
+  notify("tool-moved");
   if (currentLine && event.buttons === 1){
     currentLine.drag(event.offsetX, event.offsetY);
     currentLine.display(ctx);
-  }
-  if (mouse_cursor.cursor_line.length >= 1){
-    mouse_cursor.add_dot(event.offsetX, event.offsetY);
-    dispatchToolMovedEvent();
   }
 }
 
@@ -46,36 +48,36 @@ canvas.addEventListener('mouseup', () => {
   currentLine = null!;
 });
 
+canvas.addEventListener("mouseout", () => {
+  Marker_cursor = null;
+  notify("tool-moved");
+});
+
+canvas.addEventListener("mouseenter", (e) => {
+  Marker_cursor = new Cursor(e.offsetX, e.offsetY);
+  notify("tool-moved");
+});
+
 canvas.addEventListener('mousedown', handleMouseDown);
 canvas.addEventListener('mousemove', handleMouseMove);
 
+canvas.addEventListener("drawing-changed", redraw);
+canvas.addEventListener("tool-moved", redraw);
 
-function dispatchDrawingChangedEvent() {
-  const event = new CustomEvent('drawing-changed');
-  canvas.dispatchEvent(event);
+// redraw function
+function redraw(){
+  if (ctx) {
+    ctx.fillStyle = "white";
+    ctx.fillRect(5, 5, 256, 256);
+    for(const line of lines){
+        line.display(ctx);
+    }
+  }
+  if (Marker_cursor){
+    Marker_cursor.display(ctx);
+  }
 }
 
-function dispatchToolMovedEvent(){
-  const event = new CustomEvent('tool-moved');
-  canvas.dispatchEvent(event);
-}
-
-
-canvas.addEventListener('drawing-changed', () => {
-  if (ctx) {
-      ctx.fillStyle = "white";
-      ctx.fillRect(5, 5, 256, 256);
-      for(const line of lines){
-          line.display(ctx);
-      }
-  }
-});
-
-canvas.addEventListener('tool-moved', () =>{
-  if (ctx) {
-    mouse_cursor.display(ctx);
-  }
-});
 
 // clear button
 const clear: HTMLButtonElement = document.querySelector("#clear")!;
@@ -94,7 +96,7 @@ undo.addEventListener("click", () => {
     const undo_line: Marker_line = lines.pop()!;
     console.log(undo_line);
     redo_stack.push(undo_line);
-    dispatchDrawingChangedEvent();
+    notify('drawing-changed');
   }
 });
 
@@ -104,7 +106,7 @@ redo.addEventListener("click", () => {
   if (redo_stack.length != 0){
     const redo_line: Marker_line = redo_stack.pop()!;
     lines.push(redo_line);
-    dispatchDrawingChangedEvent();
+    notify('drawing-changed');
   }
 });
 
@@ -120,26 +122,25 @@ thin.addEventListener("click", () => {
   thickness = 1;
 });
 
+canvas.addEventListener("mouseenter", (e) => {
+  Marker_cursor = new Cursor(e.offsetX, e.offsetY);
+  notify("cursor-changed");
+});
+
 //Cursor Class
-class Cursor implements Displayable{
+class Cursor implements Displayable {
 
-  public cursor_line: Point[] = [];
+  private x: number;
+  private y: number;
 
-  constructor(init_x: number, init_y: number) {
-    this.cursor_line.push({x: init_x, y: init_y});
+  constructor(x: number, y:number) {
+    this.x = x;
+    this.y = y;
   }
-
-  public add_dot(x: number, y: number){
-    this.cursor_line.push({x, y});
-  }
-
   display(ctx: CanvasRenderingContext2D): void {
-    const dot: Point = this.cursor_line[this.cursor_line.length - 1];
-    ctx.fillStyle = "white";
-    ctx.beginPath();
-    ctx.arc(dot.x, dot.y, thickness/2, 0, 2 * Math.PI, true);
-    ctx.stroke();
-    ctx.closePath();
+    const size = thickness * 5;
+    ctx.font = size + "px monospace";
+    ctx.fillText("o", this.x - 8, this.y + 16);
   }
 }
 
