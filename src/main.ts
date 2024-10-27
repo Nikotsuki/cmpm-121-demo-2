@@ -24,7 +24,7 @@ interface Displayable {
 }
 
 function handleMouseDown(event: MouseEvent) {
-  currentLine = new Marker_line(event.offsetX, event.offsetY)
+  currentLine = new Marker_line(event.offsetX, event.offsetY, thickness);
 }
 
 function handleMouseMove(event: MouseEvent) {
@@ -148,9 +148,11 @@ class Cursor implements Displayable{
 class Marker_line implements Displayable{
 
   public line: Point[] = [];
+  public marker_thickness: number;
 
-  constructor(init_x: number, init_y: number) {
+  constructor(init_x: number, init_y: number, _thickness: number) {
     this.line.push({x: init_x, y: init_y});
+    this.marker_thickness = _thickness;
   }
   
   public drag(x: number, y: number){
@@ -165,7 +167,7 @@ class Marker_line implements Displayable{
         ctx.lineTo(point.x, point.y);
     }
     ctx.strokeStyle = 'black';
-    ctx.lineWidth = thickness;
+    ctx.lineWidth = this.marker_thickness;
     ctx.stroke();
     ctx.closePath();
   }
