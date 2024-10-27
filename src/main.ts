@@ -40,7 +40,7 @@ function handleMouseMove(event: MouseEvent) {
   if (currentLine && event.buttons === 1){
     currentLine.drag(event.offsetX, event.offsetY);
     currentLine.display(ctx);
-    notify('drawing-changed');
+    //notify('drawing-changed');
   }
 }
 
