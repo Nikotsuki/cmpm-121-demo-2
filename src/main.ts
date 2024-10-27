@@ -136,8 +136,10 @@ class Cursor implements Displayable{
   display(ctx: CanvasRenderingContext2D): void {
     const dot: Point = this.cursor_line[0];
     ctx.fillStyle = "white";
+    ctx.beginPath();
     ctx.arc(dot.x, dot.y, thickness/2, 0, 2 * Math.PI, true);
     ctx.stroke();
+    ctx.closePath();
   }
 }
 
