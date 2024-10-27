@@ -17,7 +17,7 @@ canvas.style.cursor = "none";
 
 type Point = { x: number, y: number };
 let lines: Marker_line[] = []; 
-let currentLine: Marker_line;
+let currentLine: Marker_line | null = null;
 let redo_stack: Marker_line[] = [];
 let thickness: number = 2;
 let Marker_cursor: Cursor | null = null;
@@ -45,8 +45,9 @@ function handleMouseMove(event: MouseEvent) {
 }
 
 canvas.addEventListener('mouseup', () => {
-  lines.push(currentLine);
-  currentLine = null!;
+  //lines.push(currentLine);
+  currentLine = null;
+  notify('drawing-changed');
 });
 
 canvas.addEventListener("mouseout", () => {
