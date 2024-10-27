@@ -19,7 +19,7 @@ type Point = { x: number, y: number };
 let lines: Marker_line[] = []; 
 let currentLine: Marker_line;
 let redo_stack: Marker_line[] = [];
-let thickness: number = 1;
+let thickness: number = 2;
 let Marker_cursor: Cursor | null = null;
 
 interface Displayable {
@@ -39,6 +39,7 @@ function handleMouseMove(event: MouseEvent) {
   notify("tool-moved");
   if (currentLine && event.buttons === 1){
     currentLine.drag(event.offsetX, event.offsetY);
+    currentLine.display(ctx);
     notify('drawing-changed');
   }
 }
@@ -119,7 +120,7 @@ thick.addEventListener("click", () => {
 // thin button
 const thin: HTMLButtonElement = document.querySelector("#thin")!;
 thin.addEventListener("click", () => {
-  thickness = 1;
+  thickness = 2;
 });
 
 canvas.addEventListener("mouseenter", (e) => {
