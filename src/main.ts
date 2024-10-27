@@ -39,7 +39,7 @@ function handleMouseMove(event: MouseEvent) {
   notify("tool-moved");
   if (currentLine && event.buttons === 1){
     currentLine.drag(event.offsetX, event.offsetY);
-    currentLine.display(ctx);
+    notify('drawing-changed');
   }
 }
 
