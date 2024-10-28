@@ -21,6 +21,7 @@ let currentLine: Marker_line | null = null;
 let redo_stack: Marker_line[] = [];
 let thickness: number = 2;
 let Marker_cursor: Cursor | null = null;
+let symbol: string = "o";
 
 interface Displayable {
   display(context: CanvasRenderingContext2D): void;
@@ -35,7 +36,7 @@ function handleMouseDown(event: MouseEvent) {
 }
 
 function handleMouseMove(event: MouseEvent) {
-  Marker_cursor = new Cursor(event.offsetX, event.offsetY);
+  Marker_cursor = new Cursor(event.offsetX, event.offsetY, symbol);
   notify("tool-moved");
   if (currentLine && event.buttons === 1){
     currentLine.drag(event.offsetX, event.offsetY);
@@ -58,12 +59,12 @@ canvas.addEventListener("mouseout", () => {
 });
 
 canvas.addEventListener("mouseenter", (e) => {
-  Marker_cursor = new Cursor(e.offsetX, e.offsetY);
+  Marker_cursor = new Cursor(e.offsetX, e.offsetY, symbol);
   notify("tool-moved");
 });
 
 canvas.addEventListener("mouseenter", (e) => {
-  Marker_cursor = new Cursor(e.offsetX, e.offsetY);
+  Marker_cursor = new Cursor(e.offsetX, e.offsetY, symbol);
   notify("cursor-changed");
 });
 
@@ -122,31 +123,36 @@ redo.addEventListener("click", () => {
 // thick button
 const thick: HTMLButtonElement = document.querySelector("#thick")!;
 thick.addEventListener("click", () => {
+  symbol = "o";
   thickness = 6;
 });
 
 // thin button
 const thin: HTMLButtonElement = document.querySelector("#thin")!;
 thin.addEventListener("click", () => {
+  symbol = "o";
   thickness = 2;
 });
 
 // woozy button
 const woozy: HTMLButtonElement = document.querySelector("#woozy")!;
 woozy.addEventListener("click", () => {
-  thickness = 2;
+  symbol = "🥴";
+  notify('tool-moved');
 });
 
 // moai button
 const moai: HTMLButtonElement = document.querySelector("#moai")!;
 moai.addEventListener("click", () => {
-  thickness = 2;
+  symbol = "🗿";
+  notify('tool-moved');
 });
 
 // china button
 const china: HTMLButtonElement = document.querySelector("#china")!;
 china.addEventListener("click", () => {
-  thickness = 2;
+  symbol = "🇨🇳";
+  notify('tool-moved');
 });
 
 
@@ -155,16 +161,19 @@ class Cursor implements Displayable {
 
   private x: number;
   private y: number;
+  private symbol: string
 
-  constructor(x: number, y:number) {
+  constructor(x: number, y:number, symbol: string) {
     this.x = x;
     this.y = y;
+    this.symbol = symbol
   }
+
   display(ctx: CanvasRenderingContext2D): void {
     ctx.fillStyle = "#000000";
     const size = thickness * 5;
     ctx.font = size + "px monospace";
-    ctx.fillText("o", this.x - 8, this.y + 16);
+    ctx.fillText(this.symbol, this.x - 4, this.y + 10);
   }
 }
 
