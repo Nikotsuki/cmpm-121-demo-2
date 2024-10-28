@@ -35,11 +35,13 @@ function notify(name: string) {
   canvas.dispatchEvent(new Event(name));
 }
 
+//mouse down
 function handleMouseDown(event: MouseEvent) {
   currentLine = new Marker_line(event.offsetX, event.offsetY, thickness);
   sticker = new Sticker(event.offsetX, event.offsetY, sticker_symbol, thickness);
 }
 
+//mouse move
 function handleMouseMove(event: MouseEvent) {
   Marker_cursor = new Cursor(event.offsetX, event.offsetY, symbol);
   notify("tool-moved");
@@ -54,6 +56,7 @@ function handleMouseMove(event: MouseEvent) {
   }
 }
 
+//mouse up
 canvas.addEventListener('mouseup', () => {
   if (currentLine){
     lines.push(currentLine);
@@ -66,12 +69,14 @@ canvas.addEventListener('mouseup', () => {
   notify('drawing-changed');
 });
 
+//mouse out
 canvas.addEventListener("mouseout", () => {
   Marker_cursor = null;
   //sticker = null;
   notify("tool-moved");
 });
 
+//mouse enter
 canvas.addEventListener("mouseenter", (e) => {
   Marker_cursor = new Cursor(e.offsetX, e.offsetY, symbol);
   //sticker = new Sticker(e.offsetX, e.offsetY, symbol);
@@ -97,9 +102,7 @@ function redraw(){
   if (Marker_cursor){
     Marker_cursor.display(ctx);
   }
-  if (sticker){
-    sticker_list.forEach(sticker => sticker.display(ctx));
-  }
+  sticker_list.forEach(sticker => sticker.display(ctx));
 }
 
 
