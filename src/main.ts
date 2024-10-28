@@ -72,7 +72,7 @@ canvas.addEventListener("mouseout", () => {
 
 canvas.addEventListener("mouseenter", (e) => {
   Marker_cursor = new Cursor(e.offsetX, e.offsetY, symbol);
-  sticker = new Sticker(e.offsetX, e.offsetY, symbol);
+  //sticker = new Sticker(e.offsetX, e.offsetY, symbol);
   notify("tool-moved");
 });
 
