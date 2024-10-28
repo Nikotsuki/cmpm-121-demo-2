@@ -48,7 +48,6 @@ function handleMouseMove(event: MouseEvent) {
   }
   if (sticker && event.buttons === 1){
     sticker.drag(event.offsetX, event.offsetY);
-    sticker.display(ctx);
   }
   notify("tool-moved");
 }
