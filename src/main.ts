@@ -155,7 +155,7 @@ thin.addEventListener("click", () => {
 const woozy: HTMLButtonElement = document.querySelector("#woozy")!;
 woozy.addEventListener("click", () => {
   sticker_symbol = "🥴";
-
+  symbol = "🥴";
   notify('tool-moved');
 });
 
@@ -163,6 +163,7 @@ woozy.addEventListener("click", () => {
 const moai: HTMLButtonElement = document.querySelector("#moai")!;
 moai.addEventListener("click", () => {
   sticker_symbol = "🗿";
+  symbol = "🗿";
   notify('tool-moved');
 });
 
@@ -170,6 +171,7 @@ moai.addEventListener("click", () => {
 const china: HTMLButtonElement = document.querySelector("#china")!;
 china.addEventListener("click", () => {
   sticker_symbol = "🇨🇳";
+  symbol = "🇨🇳";
   notify('tool-moved');
 });
 
