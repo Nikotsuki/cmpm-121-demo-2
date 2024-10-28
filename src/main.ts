@@ -23,6 +23,7 @@ let redo_stack: Marker_line[] = [];
 let thickness: number = 2;
 let Marker_cursor: Cursor | null = null;
 let symbol: string = "o";
+let sticker: Sticker | null = null;
 
 interface Displayable {
   display(context: CanvasRenderingContext2D): void;
@@ -34,6 +35,7 @@ function notify(name: string) {
 
 function handleMouseDown(event: MouseEvent) {
   currentLine = new Marker_line(event.offsetX, event.offsetY, thickness);
+  sticker = new Sticker(event.offsetX, event.offsetY, symbol);
 }
 
 function handleMouseMove(event: MouseEvent) {
@@ -43,6 +45,10 @@ function handleMouseMove(event: MouseEvent) {
     currentLine.drag(event.offsetX, event.offsetY);
     currentLine.display(ctx);
     //notify('drawing-changed');
+  }
+  if (sticker && event.buttons === 1){
+    sticker.drag(event.offsetX, event.offsetY);
+    sticker.display(ctx);
   }
 }
 
@@ -56,17 +62,14 @@ canvas.addEventListener('mouseup', () => {
 
 canvas.addEventListener("mouseout", () => {
   Marker_cursor = null;
+  sticker = null;
   notify("tool-moved");
 });
 
 canvas.addEventListener("mouseenter", (e) => {
   Marker_cursor = new Cursor(e.offsetX, e.offsetY, symbol);
+  sticker = new Sticker(e.offsetX, e.offsetY, symbol);
   notify("tool-moved");
-});
-
-canvas.addEventListener("mouseenter", (e) => {
-  Marker_cursor = new Cursor(e.offsetX, e.offsetY, symbol);
-  notify("cursor-changed");
 });
 
 canvas.addEventListener('mousedown', handleMouseDown);
@@ -160,6 +163,31 @@ china.addEventListener("click", () => {
 });
 
 
+//Sticker Class
+class Sticker implements Displayable{
+  private x: number;
+  private y: number;
+  private symbol: string;
+
+  constructor(x: number, y:number, symbol: string) {
+    this.x = x;
+    this.y = y;
+    this.symbol = symbol;
+  }
+
+  public drag(x: number, y: number){
+    this.x = x;
+    this.y = y;
+  }
+
+  display(ctx: CanvasRenderingContext2D): void {
+    ctx.fillStyle = "#000000";
+    const size = thickness * 5;
+    ctx.font = size + "px monospace";
+    ctx.fillText(this.symbol, this.x - 4, this.y + 10);
+  }
+}
+
 //Cursor Class
 class Cursor implements Displayable {
 
@@ -178,11 +206,6 @@ class Cursor implements Displayable {
     const size = thickness * 5;
     ctx.font = size + "px monospace";
     ctx.fillText(this.symbol, this.x - 4, this.y + 10);
-  }
-
-  public update_pos(x: number, y: number){
-    this.x = x;
-    this.y = y;
   }
 }
 
