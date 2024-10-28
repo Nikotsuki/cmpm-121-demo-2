@@ -66,7 +66,7 @@ canvas.addEventListener('mouseup', () => {
 
 canvas.addEventListener("mouseout", () => {
   Marker_cursor = null;
-  sticker = null;
+  //sticker = null;
   notify("tool-moved");
 });
 
