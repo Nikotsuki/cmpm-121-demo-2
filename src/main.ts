@@ -36,6 +36,8 @@ function notify(name: string) {
 function handleMouseDown(event: MouseEvent) {
   currentLine = new Marker_line(event.offsetX, event.offsetY, thickness);
   sticker = new Sticker(event.offsetX, event.offsetY, symbol);
+  sticker.drag(event.offsetX, event.offsetY);
+    sticker.display(ctx);
 }
 
 function handleMouseMove(event: MouseEvent) {
@@ -45,10 +47,6 @@ function handleMouseMove(event: MouseEvent) {
     currentLine.drag(event.offsetX, event.offsetY);
     currentLine.display(ctx);
     //notify('drawing-changed');
-  }
-  if (sticker && event.buttons === 1){
-    sticker.drag(event.offsetX, event.offsetY);
-    sticker.display(ctx);
   }
 }
 
