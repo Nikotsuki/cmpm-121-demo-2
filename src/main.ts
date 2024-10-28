@@ -170,11 +170,11 @@ moai.addEventListener("click", () => {
   notify('tool-moved');
 });
 
-// china button
-const china: HTMLButtonElement = document.querySelector("#china")!;
-china.addEventListener("click", () => {
-  sticker_symbol = "🇨🇳";
-  symbol = "🇨🇳";
+// beer button
+const beer: HTMLButtonElement = document.querySelector("#beer")!;
+beer.addEventListener("click", () => {
+  sticker_symbol = "🍺";
+  symbol = "🍺";
   notify('tool-moved');
 });
 
