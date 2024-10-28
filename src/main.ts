@@ -138,6 +138,7 @@ thin.addEventListener("click", () => {
 const woozy: HTMLButtonElement = document.querySelector("#woozy")!;
 woozy.addEventListener("click", () => {
   symbol = "🥴";
+
   notify('tool-moved');
 });
 
@@ -161,12 +162,12 @@ class Cursor implements Displayable {
 
   private x: number;
   private y: number;
-  private symbol: string
+  private symbol: string;
 
   constructor(x: number, y:number, symbol: string) {
     this.x = x;
     this.y = y;
-    this.symbol = symbol
+    this.symbol = symbol;
   }
 
   display(ctx: CanvasRenderingContext2D): void {
@@ -174,6 +175,11 @@ class Cursor implements Displayable {
     const size = thickness * 5;
     ctx.font = size + "px monospace";
     ctx.fillText(this.symbol, this.x - 4, this.y + 10);
+  }
+
+  public update_pos(x: number, y: number){
+    this.x = x;
+    this.y = y;
   }
 }
 
