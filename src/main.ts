@@ -7,28 +7,36 @@ const app = document.querySelector<HTMLDivElement>("#app")!;
 header.innerHTML = APP_NAME;
 app.append(header);
 
+
 const canvas: HTMLCanvasElement = document.querySelector("#canvas")!;
 const ctx = canvas.getContext("2d")!;
 ctx.fillStyle = "white";
 ctx.fillRect(5, 5, 256, 256);
 
+canvas.style.cursor = "none";
+
 type Point = { x: number, y: number };
 let lines: Marker_line[] = []; 
-let currentLine: Marker_line;
+let currentLine: Marker_line | null = null;
 let redo_stack: Marker_line[] = [];
-let thickness: number = 1;
+let thickness: number = 2;
+let Marker_cursor: Cursor | null = null;
 
 interface Displayable {
   display(context: CanvasRenderingContext2D): void;
 }
 
+function notify(name: string) {
+  canvas.dispatchEvent(new Event(name));
+}
 
 function handleMouseDown(event: MouseEvent) {
   currentLine = new Marker_line(event.offsetX, event.offsetY, thickness);
 }
 
-
 function handleMouseMove(event: MouseEvent) {
+  Marker_cursor = new Cursor(event.offsetX, event.offsetY);
+  notify("tool-moved");
   if (currentLine && event.buttons === 1){
     currentLine.drag(event.offsetX, event.offsetY);
     currentLine.display(ctx);
@@ -36,30 +44,43 @@ function handleMouseMove(event: MouseEvent) {
 }
 
 canvas.addEventListener('mouseup', () => {
-  // Finalize the line on mouseup
-  lines.push(currentLine);
-  currentLine = null!;
+  if (currentLine){
+    lines.push(currentLine);
+  }
+  currentLine = null;
+  notify('drawing-changed');
+});
+
+canvas.addEventListener("mouseout", () => {
+  Marker_cursor = null;
+  notify("tool-moved");
+});
+
+canvas.addEventListener("mouseenter", (e) => {
+  Marker_cursor = new Cursor(e.offsetX, e.offsetY);
+  notify("tool-moved");
 });
 
 canvas.addEventListener('mousedown', handleMouseDown);
 canvas.addEventListener('mousemove', handleMouseMove);
 
+canvas.addEventListener("drawing-changed", redraw);
+canvas.addEventListener("tool-moved", redraw);
 
-function dispatchDrawingChangedEvent() {
-  const event = new CustomEvent('drawing-changed');
-  canvas.dispatchEvent(event);
+// redraw function
+function redraw(){
+  if (ctx) {
+    ctx.fillStyle = "white";
+    ctx.fillRect(5, 5, 256, 256);
+    for(const line of lines){
+        line.display(ctx);
+    }
+  }
+  if (Marker_cursor){
+    Marker_cursor.display(ctx);
+  }
 }
 
-
-canvas.addEventListener('drawing-changed', () => {
-  if (ctx) {
-      ctx.fillStyle = "white";
-      ctx.fillRect(5, 5, 256, 256);
-      for(const line of lines){
-          line.display(ctx);
-      }
-  }
-});
 
 // clear button
 const clear: HTMLButtonElement = document.querySelector("#clear")!;
@@ -78,7 +99,7 @@ undo.addEventListener("click", () => {
     const undo_line: Marker_line = lines.pop()!;
     console.log(undo_line);
     redo_stack.push(undo_line);
-    dispatchDrawingChangedEvent();
+    notify('drawing-changed');
   }
 });
 
@@ -88,7 +109,7 @@ redo.addEventListener("click", () => {
   if (redo_stack.length != 0){
     const redo_line: Marker_line = redo_stack.pop()!;
     lines.push(redo_line);
-    dispatchDrawingChangedEvent();
+    notify('drawing-changed');
   }
 });
 
@@ -101,8 +122,32 @@ thick.addEventListener("click", () => {
 // thin button
 const thin: HTMLButtonElement = document.querySelector("#thin")!;
 thin.addEventListener("click", () => {
-  thickness = 1;
+  thickness = 2;
 });
+
+canvas.addEventListener("mouseenter", (e) => {
+  Marker_cursor = new Cursor(e.offsetX, e.offsetY);
+  notify("cursor-changed");
+});
+
+//Cursor Class
+class Cursor implements Displayable {
+
+  private x: number;
+  private y: number;
+
+  constructor(x: number, y:number) {
+    this.x = x;
+    this.y = y;
+  }
+  display(ctx: CanvasRenderingContext2D): void {
+    ctx.fillStyle = "#000000";
+    const size = thickness * 5;
+    ctx.font = size + "px monospace";
+    ctx.fillText("o", this.x - 8, this.y + 16);
+  }
+}
+
 
 // Marker Class
 class Marker_line implements Displayable{
@@ -121,15 +166,14 @@ class Marker_line implements Displayable{
 
   display(ctx: CanvasRenderingContext2D): void {
     if (this.line.length === 0) return;
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = this.marker_thickness;
     ctx.beginPath();
     ctx.moveTo(this.line[0].x, this.line[0].y);
     for (const point of this.line) {
         ctx.lineTo(point.x, point.y);
     }
-    ctx.strokeStyle = 'black';
-    ctx.lineWidth = this.marker_thickness;
     ctx.stroke();
-    ctx.closePath();
   }
 
 }
