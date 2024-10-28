@@ -36,8 +36,6 @@ function notify(name: string) {
 function handleMouseDown(event: MouseEvent) {
   currentLine = new Marker_line(event.offsetX, event.offsetY, thickness);
   sticker = new Sticker(event.offsetX, event.offsetY, symbol);
-  sticker.drag(event.offsetX, event.offsetY);
-    sticker.display(ctx);
 }
 
 function handleMouseMove(event: MouseEvent) {
@@ -47,6 +45,10 @@ function handleMouseMove(event: MouseEvent) {
     currentLine.drag(event.offsetX, event.offsetY);
     currentLine.display(ctx);
     //notify('drawing-changed');
+  }
+  if (sticker && event.buttons === 1){
+    sticker.drag(event.offsetX, event.offsetY);
+    sticker.display(ctx);
   }
 }
 
@@ -179,7 +181,6 @@ class Sticker implements Displayable{
   }
 
   display(ctx: CanvasRenderingContext2D): void {
-    ctx.fillStyle = "#000000";
     const size = thickness * 5;
     ctx.font = size + "px monospace";
     ctx.fillText(this.symbol, this.x - 4, this.y + 10);
