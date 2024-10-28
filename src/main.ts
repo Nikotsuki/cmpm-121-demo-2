@@ -175,9 +175,19 @@ beer.addEventListener("click", () => {
   notify('tool-moved');
 });
 
+// custom button
+const custom: HTMLButtonElement = document.querySelector("#custom")!;
+custom.addEventListener("click", () => {
+  const text = prompt("Custom sticker text","🧽");
+  sticker_symbol = text!;
+  symbol = text!;
+  notify('tool-moved');
+});
+
 
 //Sticker Class
 class Sticker implements Displayable{
+  
   private x: number;
   private y: number;
   private symbol: string;
