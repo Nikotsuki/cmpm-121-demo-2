@@ -23,6 +23,7 @@ let redo_stack: Marker_line[] = [];
 let thickness: number = 2;
 let Marker_cursor: Cursor | null = null;
 let symbol: string = "o";
+let sticker_symbol: string = "";
 let sticker: Sticker | null = null;
 const sticker_list: Sticker[] = [];
 
@@ -36,7 +37,7 @@ function notify(name: string) {
 
 function handleMouseDown(event: MouseEvent) {
   currentLine = new Marker_line(event.offsetX, event.offsetY, thickness);
-  sticker = new Sticker(event.offsetX, event.offsetY, symbol);
+  sticker = new Sticker(event.offsetX, event.offsetY, sticker_symbol);
 }
 
 function handleMouseMove(event: MouseEvent) {
@@ -138,6 +139,7 @@ redo.addEventListener("click", () => {
 const thick: HTMLButtonElement = document.querySelector("#thick")!;
 thick.addEventListener("click", () => {
   symbol = "o";
+  sticker_symbol = "";
   thickness = 6;
 });
 
@@ -145,13 +147,14 @@ thick.addEventListener("click", () => {
 const thin: HTMLButtonElement = document.querySelector("#thin")!;
 thin.addEventListener("click", () => {
   symbol = "o";
+  sticker_symbol = "";
   thickness = 2;
 });
 
 // woozy button
 const woozy: HTMLButtonElement = document.querySelector("#woozy")!;
 woozy.addEventListener("click", () => {
-  symbol = "🥴";
+  sticker_symbol = "🥴";
 
   notify('tool-moved');
 });
@@ -159,14 +162,14 @@ woozy.addEventListener("click", () => {
 // moai button
 const moai: HTMLButtonElement = document.querySelector("#moai")!;
 moai.addEventListener("click", () => {
-  symbol = "🗿";
+  sticker_symbol = "🗿";
   notify('tool-moved');
 });
 
 // china button
 const china: HTMLButtonElement = document.querySelector("#china")!;
 china.addEventListener("click", () => {
-  symbol = "🇨🇳";
+  sticker_symbol = "🇨🇳";
   notify('tool-moved');
 });
 
