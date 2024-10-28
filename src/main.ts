@@ -24,7 +24,7 @@ let thickness: number = 2;
 let Marker_cursor: Cursor | null = null;
 let symbol: string = "o";
 let sticker: Sticker | null = null;
-let sticker_list: Sticker[] = [];
+const sticker_list: Sticker[] = [];
 
 interface Displayable {
   display(context: CanvasRenderingContext2D): void;
@@ -41,6 +41,7 @@ function handleMouseDown(event: MouseEvent) {
 
 function handleMouseMove(event: MouseEvent) {
   Marker_cursor = new Cursor(event.offsetX, event.offsetY, symbol);
+  notify("tool-moved");
   if (currentLine && event.buttons === 1){
     currentLine.drag(event.offsetX, event.offsetY);
     currentLine.display(ctx);
@@ -48,8 +49,8 @@ function handleMouseMove(event: MouseEvent) {
   }
   if (sticker && event.buttons === 1){
     sticker.drag(event.offsetX, event.offsetY);
+    sticker.display(ctx);
   }
-  notify("tool-moved");
 }
 
 canvas.addEventListener('mouseup', () => {
