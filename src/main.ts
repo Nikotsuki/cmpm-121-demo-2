@@ -25,7 +25,7 @@ let Marker_cursor: Cursor | null = null;
 let symbol: string = "o";
 let sticker_symbol: string = "";
 let sticker: Sticker | null = null;
-const sticker_list: Sticker[] = [];
+let sticker_list: Sticker[] = [];
 
 interface Displayable {
   display(context: CanvasRenderingContext2D): void;
@@ -105,7 +105,6 @@ function redraw(){
   sticker_list.forEach(sticker => sticker.display(ctx));
 }
 
-
 // clear button
 const clear: HTMLButtonElement = document.querySelector("#clear")!;
 clear.addEventListener("click", () => {
@@ -114,6 +113,7 @@ clear.addEventListener("click", () => {
   ctx.fillRect(5, 5, 256, 256);
   lines = [];
   redo_stack = [];
+  sticker_list = [];
 });
 
 // undo button
