@@ -24,6 +24,7 @@ let thickness: number = 2;
 let Marker_cursor: Cursor | null = null;
 let symbol: string = "o";
 let sticker: Sticker | null = null;
+let sticker_list: Sticker[] = [];
 
 interface Displayable {
   display(context: CanvasRenderingContext2D): void;
@@ -56,7 +57,11 @@ canvas.addEventListener('mouseup', () => {
   if (currentLine){
     lines.push(currentLine);
   }
+  if (sticker){
+    sticker_list.push(sticker);
+  }
   currentLine = null;
+  sticker = null;
   notify('drawing-changed');
 });
 
@@ -90,6 +95,9 @@ function redraw(){
   }
   if (Marker_cursor){
     Marker_cursor.display(ctx);
+  }
+  if (sticker){
+    sticker_list.forEach(sticker => sticker.display(ctx));
   }
 }
 
