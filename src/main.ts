@@ -11,6 +11,8 @@ app.append(header);
 const canvas: HTMLCanvasElement = document.querySelector("#canvas")!;
 const ctx = canvas.getContext("2d")!;
 ctx.clearRect(0,0, canvas.width, canvas.height);
+ctx.fillStyle = "white";
+ctx.fillRect(5, 5, 256, 256);
 
 canvas.style.cursor = "none";
 
@@ -77,6 +79,8 @@ canvas.addEventListener("tool-moved", redraw);
 function redraw(){
   if (ctx) {
     ctx.clearRect(0,0, canvas.width, canvas.height);
+    ctx.fillStyle = "white";
+    ctx.fillRect(5, 5, 256, 256);
     for(const line of lines){
         line.display(ctx);
     }
@@ -91,6 +95,8 @@ function redraw(){
 const clear: HTMLButtonElement = document.querySelector("#clear")!;
 clear.addEventListener("click", () => {
   ctx.clearRect(0,0, canvas.width, canvas.height);
+  ctx.fillStyle = "white";
+  ctx.fillRect(5, 5, 256, 256);
   lines = [];
   redo_stack = [];
 });
