@@ -40,7 +40,6 @@ function handleMouseDown(event: MouseEvent) {
 
 function handleMouseMove(event: MouseEvent) {
   Marker_cursor = new Cursor(event.offsetX, event.offsetY, symbol);
-  notify("tool-moved");
   if (currentLine && event.buttons === 1){
     currentLine.drag(event.offsetX, event.offsetY);
     currentLine.display(ctx);
@@ -50,6 +49,7 @@ function handleMouseMove(event: MouseEvent) {
     sticker.drag(event.offsetX, event.offsetY);
     sticker.display(ctx);
   }
+  notify("tool-moved");
 }
 
 canvas.addEventListener('mouseup', () => {
