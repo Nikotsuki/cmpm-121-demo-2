@@ -278,5 +278,4 @@ class Marker_line implements Displayable{
     }
     ctx.stroke();
   }
-
 }
