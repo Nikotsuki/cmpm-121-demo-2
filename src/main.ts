@@ -107,6 +107,7 @@ canvas.addEventListener('mousemove', handleMouseMove);
 
 function rotateText(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, angleDegrees: number) {
   ctx.save();
+  ctx.translate(0,0);
   const angleRadians = angleDegrees * Math.PI / 180;
   ctx.rotate(angleRadians);
   ctx.fillText(text, x - 4, y + 10);
