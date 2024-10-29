@@ -26,6 +26,7 @@ let symbol: string = "o";
 let sticker_symbol: string = "";
 let sticker: Sticker | null = null;
 let sticker_list: Sticker[] = [];
+let context: CanvasRenderingContext2D = ctx;
 
 interface Displayable {
   display(context: CanvasRenderingContext2D): void;
@@ -83,24 +84,24 @@ canvas.addEventListener("mouseenter", (e) => {
 canvas.addEventListener('mousedown', handleMouseDown);
 canvas.addEventListener('mousemove', handleMouseMove);
 
-canvas.addEventListener("drawing-changed", redraw);
-canvas.addEventListener("tool-moved", redraw);
-
 // redraw function
 function redraw(){
-  if (ctx) {
-    ctx.clearRect(0,0, canvas.width, canvas.height);
-    ctx.fillStyle = "white";
-    ctx.fillRect(5, 5, 256, 256);
-    for(const line of lines){
-        line.display(ctx);
-    }
-  }
-  if (Marker_cursor){
-    Marker_cursor.display(ctx);
-  }
-  sticker_list.forEach(sticker => sticker.display(ctx));
+   if (context) {
+     context.clearRect(0,0, canvas.width, canvas.height);
+     context.fillStyle = "white";
+     context.fillRect(5, 5, 256, 256);
+     for(const line of lines){
+         line.display(context);
+     }
+   }
+   if (Marker_cursor){
+     Marker_cursor.display(context);
+   }
+   sticker_list.forEach(sticker => sticker.display(context));
 }
+
+canvas.addEventListener("drawing-changed", redraw);
+canvas.addEventListener("tool-moved", redraw);
 
 // clear button
 const clear: HTMLButtonElement = document.querySelector("#clear")!;
@@ -184,10 +185,27 @@ custom.addEventListener("click", () => {
   notify('tool-moved');
 });
 
+// export button
+const export_button: HTMLButtonElement = document.querySelector("#export")!;
+export_button.addEventListener("click", () => {
+  const ex_canvas = document.createElement('canvas');
+  ex_canvas.width = canvas.width * 4;
+  ex_canvas.height = canvas.height * 4;
+  const ex_ctx = ex_canvas.getContext("2d");
+  ctx.scale(4,4);
+  context = ex_ctx!;
+  notify('drawing-changed');
+  const anchor = document.createElement("a");
+  anchor.href = canvas.toDataURL("image/png");
+  anchor.download = "sketchpad.png";
+  anchor.click();
+  context = ctx;
+});
+
 
 //Sticker Class
 class Sticker implements Displayable{
-  
+
   private x: number;
   private y: number;
   private symbol: string;
@@ -260,5 +278,4 @@ class Marker_line implements Displayable{
     }
     ctx.stroke();
   }
-
 }
