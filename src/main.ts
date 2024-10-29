@@ -110,7 +110,7 @@ function rotateText(ctx: CanvasRenderingContext2D, text: string, x: number, y: n
   ctx.translate(0,0);
   const angleRadians = angleDegrees * Math.PI / 180;
   ctx.rotate(angleRadians);
-  ctx.fillText(text, x - 4, y + 10);
+  ctx.fillText(text, x, y);
   ctx.restore();
 }
 
