@@ -27,7 +27,7 @@ let sticker: Sticker | null = null;
 let sticker_list: Sticker[] = [];
 let context: CanvasRenderingContext2D = ctx;
 let color: string = "black";
-let rotation: string = "0";
+let rotation: number = 0;
 
 interface Displayable {
   display(context: CanvasRenderingContext2D): void;
@@ -103,6 +103,14 @@ canvas.addEventListener("drawing-changed", redraw);
 canvas.addEventListener("tool-moved", redraw);
 canvas.addEventListener('mousedown', handleMouseDown);
 canvas.addEventListener('mousemove', handleMouseMove);
+
+function drawRotatedText(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, angleDegrees: number) {
+  ctx.save();
+  const angleRadians = angleDegrees * Math.PI / 180;
+  ctx.rotate(angleRadians);
+  ctx.fillText(text, x - 4, y + 10);
+  ctx.restore();
+}
 
 // clear button
 const clear: HTMLButtonElement = document.querySelector("#clear")!;
@@ -230,7 +238,7 @@ export_button.addEventListener("click", () => {
 // rotate slider
 const rotate: HTMLButtonElement = document.querySelector("#rotate")!;
 rotate.addEventListener("rotate", () => {
-  rotation = rotate.value;
+  rotation = parseInt(rotate.value);
 });
 
 //Sticker Class
@@ -256,7 +264,7 @@ class Sticker implements Displayable{
   display(ctx: CanvasRenderingContext2D): void {
     const size = this.sticker_thickness * 5;
     ctx.font = size + "px monospace";
-    ctx.fillText(this.symbol, this.x - 4, this.y + 10);
+    drawRotatedText(ctx, this.symbol, this.x, this.y, rotation)
   }
 }
 
@@ -279,7 +287,7 @@ class Cursor implements Displayable {
     ctx.fillStyle = this.color;
     const size = thickness * 5;
     ctx.font = size + "px monospace";
-    ctx.fillText(this.symbol, this.x - 4, this.y + 10);
+    drawRotatedText(ctx, this.symbol, this.x, this.y, rotation)
   }
 }
 
