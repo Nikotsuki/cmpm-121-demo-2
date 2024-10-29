@@ -320,9 +320,9 @@ class Marker_line implements Displayable{
     ctx.strokeStyle = this.color;
     ctx.lineWidth = this.marker_thickness;
     ctx.beginPath();
-    ctx.moveTo(this.line[0].x, this.line[0].y);
+    ctx.moveTo(this.line[0].x - 4, this.line[0].y + 10);
     for (const point of this.line) {
-        ctx.lineTo(point.x, point.y);
+        ctx.lineTo(point.x - 4, point.y + 10);
     }
     ctx.stroke();
   }
