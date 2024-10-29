@@ -56,6 +56,7 @@ function handleMouseMove(event: MouseEvent) {
     sticker.drag(event.offsetX, event.offsetY);
     sticker.display(ctx);
   }
+  console.log(rotation);
 }
 
 //mouse up
