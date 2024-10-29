@@ -239,6 +239,7 @@ export_button.addEventListener("click", () => {
 const rotate: HTMLButtonElement = document.querySelector("#rotate")!;
 rotate.addEventListener("rotate", () => {
   rotation = parseInt(rotate.value);
+  console.log(rotation);
 });
 
 //Sticker Class
