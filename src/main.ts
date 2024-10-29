@@ -105,7 +105,7 @@ canvas.addEventListener("tool-moved", redraw);
 canvas.addEventListener('mousedown', handleMouseDown);
 canvas.addEventListener('mousemove', handleMouseMove);
 
-function drawRotatedText(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, angleDegrees: number) {
+function rotateText(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, angleDegrees: number) {
   ctx.save();
   const angleRadians = angleDegrees * Math.PI / 180;
   ctx.rotate(angleRadians);
@@ -267,7 +267,7 @@ class Sticker implements Displayable{
   display(ctx: CanvasRenderingContext2D): void {
     const size = this.sticker_thickness * 5;
     ctx.font = size + "px monospace";
-    drawRotatedText(ctx, this.symbol, this.x, this.y, this.rotation)
+    rotateText(ctx, this.symbol, this.x, this.y, this.rotation);
   }
 }
 
@@ -284,7 +284,7 @@ class Cursor implements Displayable {
     this.x = x;
     this.y = y;
     this.symbol = symbol;
-    this.color = color
+    this.color = color;
     this.rotation = rotation;
   }
 
@@ -292,7 +292,7 @@ class Cursor implements Displayable {
     ctx.fillStyle = this.color;
     const size = thickness * 5;
     ctx.font = size + "px monospace";
-    drawRotatedText(ctx, this.symbol, this.x, this.y, this.rotation)
+    rotateText(ctx, this.symbol, this.x, this.y, this.rotation);
   }
 }
 
@@ -307,7 +307,7 @@ class Marker_line implements Displayable{
   constructor(init_x: number, init_y: number, _thickness: number, color: string) {
     this.line.push({x: init_x, y: init_y});
     this.marker_thickness = _thickness;
-    this.color = color
+    this.color = color;
   }
   
   public drag(x: number, y: number){
