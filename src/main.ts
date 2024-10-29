@@ -26,6 +26,7 @@ let sticker_symbol: string = "";
 let sticker: Sticker | null = null;
 let sticker_list: Sticker[] = [];
 let context: CanvasRenderingContext2D = ctx;
+let color: string = "black";
 
 interface Displayable {
   display(context: CanvasRenderingContext2D): void;
@@ -38,13 +39,13 @@ function notify(name: string) {
 
 //mouse down
 function handleMouseDown(event: MouseEvent) {
-  currentLine = new Marker_line(event.offsetX, event.offsetY, thickness);
+  currentLine = new Marker_line(event.offsetX, event.offsetY, thickness, color);
   sticker = new Sticker(event.offsetX, event.offsetY, sticker_symbol, thickness);
 }
 
 //mouse move
 function handleMouseMove(event: MouseEvent) {
-  Marker_cursor = new Cursor(event.offsetX, event.offsetY, symbol);
+  Marker_cursor = new Cursor(event.offsetX, event.offsetY, symbol, color);
   notify("tool-moved");
   if (currentLine && event.buttons === 1){
     currentLine.drag(event.offsetX, event.offsetY);
@@ -77,7 +78,7 @@ canvas.addEventListener("mouseout", () => {
 
 //mouse enter
 canvas.addEventListener("mouseenter", (e) => {
-  Marker_cursor = new Cursor(e.offsetX, e.offsetY, symbol);
+  Marker_cursor = new Cursor(e.offsetX, e.offsetY, symbol, color);
   notify("tool-moved");
 });
 
@@ -149,6 +150,30 @@ thin.addEventListener("click", () => {
   symbol = "o";
   sticker_symbol = "";
   thickness = 2;
+});
+
+// red button
+const red: HTMLButtonElement = document.querySelector("#red")!;
+red.addEventListener("click", () => {
+  color = "red";
+});
+
+// blue button
+const blue: HTMLButtonElement = document.querySelector("#blue")!;
+blue.addEventListener("click", () => {
+  color = "blue";
+});
+
+// green button
+const green: HTMLButtonElement = document.querySelector("#green")!;
+green.addEventListener("click", () => {
+  color = "green";
+});
+
+// black button
+const black: HTMLButtonElement = document.querySelector("#black")!;
+black.addEventListener("click", () => {
+  color = "black";
 });
 
 // woozy button
@@ -235,15 +260,17 @@ class Cursor implements Displayable {
   private x: number;
   private y: number;
   private symbol: string;
+  private color: string;
 
-  constructor(x: number, y:number, symbol: string) {
+  constructor(x: number, y:number, symbol: string, color: string) {
     this.x = x;
     this.y = y;
     this.symbol = symbol;
+    this.color = color
   }
 
   display(ctx: CanvasRenderingContext2D): void {
-    ctx.fillStyle = "#000000";
+    ctx.fillStyle = this.color;
     const size = thickness * 5;
     ctx.font = size + "px monospace";
     ctx.fillText(this.symbol, this.x - 4, this.y + 10);
@@ -256,10 +283,12 @@ class Marker_line implements Displayable{
 
   public line: Point[] = [];
   public marker_thickness: number;
+  private color: string;
 
-  constructor(init_x: number, init_y: number, _thickness: number) {
+  constructor(init_x: number, init_y: number, _thickness: number, color: string) {
     this.line.push({x: init_x, y: init_y});
     this.marker_thickness = _thickness;
+    this.color = color
   }
   
   public drag(x: number, y: number){
@@ -268,7 +297,7 @@ class Marker_line implements Displayable{
 
   display(ctx: CanvasRenderingContext2D): void {
     if (this.line.length === 0) return;
-    ctx.strokeStyle = 'black';
+    ctx.strokeStyle = this.color;
     ctx.lineWidth = this.marker_thickness;
     ctx.beginPath();
     ctx.moveTo(this.line[0].x, this.line[0].y);
