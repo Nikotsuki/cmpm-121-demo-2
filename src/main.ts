@@ -19,7 +19,7 @@ type Point = { x: number, y: number };
 let lines: Marker_line[] = []; 
 let currentLine: Marker_line | null = null;
 let redo_stack: Marker_line[] = [];
-let thickness: number = 2;
+let thickness: number = 3;
 let Marker_cursor: Cursor | null = null;
 let symbol: string = "o";
 let sticker_symbol: string = "";
@@ -27,6 +27,7 @@ let sticker: Sticker | null = null;
 let sticker_list: Sticker[] = [];
 let context: CanvasRenderingContext2D = ctx;
 let color: string = "black";
+let rotation: string = "0";
 
 interface Displayable {
   display(context: CanvasRenderingContext2D): void;
@@ -149,7 +150,7 @@ const thin: HTMLButtonElement = document.querySelector("#thin")!;
 thin.addEventListener("click", () => {
   symbol = "o";
   sticker_symbol = "";
-  thickness = 2;
+  thickness = 3;
 });
 
 // red button
@@ -226,6 +227,11 @@ export_button.addEventListener("click", () => {
   context = ctx;
 });
 
+// rotate slider
+const rotate: HTMLButtonElement = document.querySelector("#rotate")!;
+rotate.addEventListener("rotate", () => {
+  rotation = rotate.value;
+});
 
 //Sticker Class
 class Sticker implements Displayable{
