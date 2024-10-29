@@ -41,12 +41,12 @@ function notify(name: string) {
 //mouse down
 function handleMouseDown(event: MouseEvent) {
   currentLine = new Marker_line(event.offsetX, event.offsetY, thickness, color);
-  sticker = new Sticker(event.offsetX, event.offsetY, sticker_symbol, thickness);
+  sticker = new Sticker(event.offsetX, event.offsetY, sticker_symbol, thickness, rotation);
 }
 
 //mouse move
 function handleMouseMove(event: MouseEvent) {
-  Marker_cursor = new Cursor(event.offsetX, event.offsetY, symbol, color);
+  Marker_cursor = new Cursor(event.offsetX, event.offsetY, symbol, color, rotation);
   notify("tool-moved");
   if (currentLine && event.buttons === 1){
     currentLine.drag(event.offsetX, event.offsetY);
@@ -79,7 +79,7 @@ canvas.addEventListener("mouseout", () => {
 
 //mouse enter
 canvas.addEventListener("mouseenter", (e) => {
-  Marker_cursor = new Cursor(e.offsetX, e.offsetY, symbol, color);
+  Marker_cursor = new Cursor(e.offsetX, e.offsetY, symbol, color, rotation);
   notify("tool-moved");
 });
 
@@ -239,7 +239,6 @@ export_button.addEventListener("click", () => {
 const rotate: HTMLButtonElement = document.querySelector("#rotate")!;
 rotate.addEventListener("rotate", () => {
   rotation = parseInt(rotate.value);
-  console.log(rotation);
 });
 
 //Sticker Class
@@ -249,12 +248,14 @@ class Sticker implements Displayable{
   private y: number;
   private symbol: string;
   private sticker_thickness: number;
+  private rotation: number;
 
-  constructor(x: number, y:number, symbol: string, thickness: number) {
+  constructor(x: number, y:number, symbol: string, thickness: number, rotation: number) {
     this.x = x;
     this.y = y;
     this.symbol = symbol;
     this.sticker_thickness = thickness;
+    this.rotation = rotation;
   }
 
   public drag(x: number, y: number){
@@ -265,7 +266,7 @@ class Sticker implements Displayable{
   display(ctx: CanvasRenderingContext2D): void {
     const size = this.sticker_thickness * 5;
     ctx.font = size + "px monospace";
-    drawRotatedText(ctx, this.symbol, this.x, this.y, rotation)
+    drawRotatedText(ctx, this.symbol, this.x, this.y, this.rotation)
   }
 }
 
@@ -276,19 +277,21 @@ class Cursor implements Displayable {
   private y: number;
   private symbol: string;
   private color: string;
+  private rotation: number;
 
-  constructor(x: number, y:number, symbol: string, color: string) {
+  constructor(x: number, y:number, symbol: string, color: string, rotation: number) {
     this.x = x;
     this.y = y;
     this.symbol = symbol;
     this.color = color
+    this.rotation = rotation;
   }
 
   display(ctx: CanvasRenderingContext2D): void {
     ctx.fillStyle = this.color;
     const size = thickness * 5;
     ctx.font = size + "px monospace";
-    drawRotatedText(ctx, this.symbol, this.x, this.y, rotation)
+    drawRotatedText(ctx, this.symbol, this.x, this.y, this.rotation)
   }
 }
 
