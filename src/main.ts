@@ -293,7 +293,7 @@ class Cursor implements Displayable {
     ctx.fillStyle = this.color;
     const size = thickness * 5;
     ctx.font = size + "px monospace";
-    rotateText(ctx, this.symbol, this.x, this.y, this.rotation);
+    ctx.fillText(this.symbol, this.x - 4, this.y + 10);
   }
 }
 
