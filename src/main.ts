@@ -238,7 +238,7 @@ export_button.addEventListener("click", () => {
 
 // rotate slider
 const rotate: HTMLInputElement = document.querySelector("#rotate")!;
-rotate.addEventListener("rotate", () => {
+rotate.addEventListener("input", () => {
   rotation = parseInt(rotate.value);
 });
 
