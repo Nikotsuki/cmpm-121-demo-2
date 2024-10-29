@@ -85,20 +85,19 @@ canvas.addEventListener('mousedown', handleMouseDown);
 canvas.addEventListener('mousemove', handleMouseMove);
 
 // redraw function
- function redraw(){
-    if (context) {
-      context.clearRect(0,0, canvas.width, canvas.height);
-      context.fillStyle = "white";
-      context.fillRect(5, 5, 256, 256);
-      for(const line of lines){
-          line.display(context);
-      }
-    }
-    if (Marker_cursor){
-      Marker_cursor.display(context);
-    }
-    sticker_list.forEach(sticker => sticker.display(context));
-  }
+function redraw(){
+   if (context) {
+     context.clearRect(0,0, canvas.width, canvas.height);
+     context.fillStyle = "white";
+     context.fillRect(5, 5, 256, 256);
+     for(const line of lines){
+         line.display(context);
+     }
+   }
+   if (Marker_cursor){
+     Marker_cursor.display(context);
+   }
+   sticker_list.forEach(sticker => sticker.display(context));
 }
 
 canvas.addEventListener("drawing-changed", redraw);
