@@ -268,12 +268,7 @@ class Sticker implements Displayable{
   display(ctx: CanvasRenderingContext2D): void {
     const size = this.sticker_thickness * 5;
     ctx.font = size + "px monospace";
-    ctx.save();
-    ctx.translate(0,0);
-    const angle = this.rotation * Math.PI / 180;
-    ctx.rotate(angle);
-    ctx.fillText(this.symbol, this.x, this.y);
-    ctx.restore();
+    rotateText(ctx, this.symbol, this.x, this.y, this.rotation);
   }
 }
 
@@ -298,12 +293,7 @@ class Cursor implements Displayable {
     ctx.fillStyle = this.color;
     const size = thickness * 5;
     ctx.font = size + "px monospace";
-    ctx.save();
-    ctx.translate(0,0);
-    const angle = this.rotation * Math.PI / 180;
-    ctx.rotate(angle);
-    ctx.fillText(this.symbol, this.x, this.y);
-    ctx.restore();
+    rotateText(ctx, this.symbol, this.x, this.y, this.rotation);
   }
 }
 
