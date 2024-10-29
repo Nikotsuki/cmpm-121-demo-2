@@ -3,19 +3,18 @@ import "./style.css";
 const header = document.createElement("h1");
 const APP_NAME = "Drawsome";
 const app = document.querySelector<HTMLDivElement>("#app")!;
-
 header.innerHTML = APP_NAME;
 app.append(header);
 
-
+//canvas setup
 const canvas: HTMLCanvasElement = document.querySelector("#canvas")!;
 const ctx = canvas.getContext("2d")!;
 ctx.clearRect(0,0, canvas.width, canvas.height);
 ctx.fillStyle = "white";
 ctx.fillRect(5, 5, 256, 256);
-
 canvas.style.cursor = "none";
 
+//variables
 type Point = { x: number, y: number };
 let lines: Marker_line[] = []; 
 let currentLine: Marker_line | null = null;
@@ -32,6 +31,7 @@ interface Displayable {
   display(context: CanvasRenderingContext2D): void;
 }
 
+//notify function
 function notify(name: string) {
   canvas.dispatchEvent(new Event(name));
 }
@@ -81,9 +81,6 @@ canvas.addEventListener("mouseenter", (e) => {
   notify("tool-moved");
 });
 
-canvas.addEventListener('mousedown', handleMouseDown);
-canvas.addEventListener('mousemove', handleMouseMove);
-
 // redraw function
 function redraw(){
    if (context) {
@@ -102,6 +99,8 @@ function redraw(){
 
 canvas.addEventListener("drawing-changed", redraw);
 canvas.addEventListener("tool-moved", redraw);
+canvas.addEventListener('mousedown', handleMouseDown);
+canvas.addEventListener('mousemove', handleMouseMove);
 
 // clear button
 const clear: HTMLButtonElement = document.querySelector("#clear")!;
