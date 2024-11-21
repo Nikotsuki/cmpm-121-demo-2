@@ -43,7 +43,6 @@ function handleMouseDown(event: MouseEvent) {
   currentLine = new Marker_line(event.offsetX, event.offsetY, thickness, color);
   sticker = new Sticker(event.offsetX, event.offsetY, sticker_symbol, thickness, rotation);
 }
-
 //mouse move
 function handleMouseMove(event: MouseEvent) {
   Marker_cursor = new Cursor(event.offsetX, event.offsetY, symbol, color, rotation);
@@ -58,52 +57,44 @@ function handleMouseMove(event: MouseEvent) {
   }
   console.log(rotation);
 }
-
 //mouse up
-canvas.addEventListener('mouseup', () => {
-  if (currentLine){
-    lines.push(currentLine);
-  }
-  if (sticker){
-    sticker_list.push(sticker);
-  }
+function handleMouseUp() {
+  if (currentLine) lines.push(currentLine);
+  if (sticker) sticker_list.push(sticker);
   currentLine = null;
   sticker = null;
   notify('drawing-changed');
-});
-
+}
 //mouse out
-canvas.addEventListener("mouseout", () => {
+function handleMouseOut() {
   Marker_cursor = null;
   notify("tool-moved");
-});
-
+}
 //mouse enter
-canvas.addEventListener("mouseenter", (e) => {
+function handleMouseEnter(e: MouseEvent) {
   Marker_cursor = new Cursor(e.offsetX, e.offsetY, symbol, color, rotation);
   notify("tool-moved");
-});
+}
 
 // redraw function: redraws lines, stickers, and cursor
-function redraw(){
-   if (context) {
-     context.clearRect(0,0, canvas.width, canvas.height);
-     context.fillStyle = "white";
-     context.fillRect(5, 5, 256, 256);
-     for(const line of lines){
-         line.display(context);
-     }
-   }
-   if (Marker_cursor){
-     Marker_cursor.display(context);
-   }
-   sticker_list.forEach(sticker => sticker.display(context));
+function redraw() {
+  if (context) {
+    context.clearRect(0,0, canvas.width, canvas.height);
+    context.fillStyle = "white";
+    context.fillRect(5, 5, 256, 256);
+    for(const line of lines) line.display(context);
+  }
+  if (Marker_cursor) Marker_cursor.display(context);
+  sticker_list.forEach(sticker => sticker.display(context));
 }
 
 canvas.addEventListener("drawing-changed", redraw);
 canvas.addEventListener("tool-moved", redraw);
 canvas.addEventListener('mousedown', handleMouseDown);
 canvas.addEventListener('mousemove', handleMouseMove);
+canvas.addEventListener('mouseup', handleMouseUp);
+canvas.addEventListener("mouseout", handleMouseOut);
+canvas.addEventListener("mouseenter", handleMouseEnter);
 
 //function to rotate canvas, paste sticker, then restore canvas
 function rotateText(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, angleDegrees: number) {
@@ -115,115 +106,49 @@ function rotateText(ctx: CanvasRenderingContext2D, text: string, x: number, y: n
   ctx.restore();
 }
 
-// clear button
-const clear: HTMLButtonElement = document.querySelector("#clear")!;
-clear.addEventListener("click", () => {
+// button event handlers
+function clearCanvas() {
   ctx.clearRect(0,0, canvas.width, canvas.height);
   ctx.fillStyle = "white";
   ctx.fillRect(5, 5, 256, 256);
   lines = [];
   redo_stack = [];
   sticker_list = [];
-});
+}
 
-// undo button
-const undo: HTMLButtonElement = document.querySelector("#undo")!;
-undo.addEventListener("click", () => {
-  if (lines.length != 0){
-    console.log(lines);
+function undoAction() {
+  if (lines.length != 0) {
     const undo_line: Marker_line = lines.pop()!;
-    console.log(undo_line);
     redo_stack.push(undo_line);
     notify('drawing-changed');
   }
-});
+}
 
-// redo button
-const redo: HTMLButtonElement = document.querySelector("#redo")!;
-redo.addEventListener("click", () => {
-  if (redo_stack.length != 0){
+function redoAction() {
+  if (redo_stack.length != 0) {
     const redo_line: Marker_line = redo_stack.pop()!;
     lines.push(redo_line);
     notify('drawing-changed');
   }
-});
+}
 
-// thick button
-const thick: HTMLButtonElement = document.querySelector("#thick")!;
-thick.addEventListener("click", () => {
+function setThickness(newThickness: number) {
   symbol = "o";
   sticker_symbol = "";
-  thickness = 6;
-});
+  thickness = newThickness;
+}
 
-// thin button
-const thin: HTMLButtonElement = document.querySelector("#thin")!;
-thin.addEventListener("click", () => {
-  symbol = "o";
-  sticker_symbol = "";
-  thickness = 3;
-});
+function setColor(newColor: string) {
+  color = newColor;
+}
 
-// red button
-const red: HTMLButtonElement = document.querySelector("#red")!;
-red.addEventListener("click", () => {
-  color = "red";
-});
-
-// blue button
-const blue: HTMLButtonElement = document.querySelector("#blue")!;
-blue.addEventListener("click", () => {
-  color = "blue";
-});
-
-// green button
-const green: HTMLButtonElement = document.querySelector("#green")!;
-green.addEventListener("click", () => {
-  color = "green";
-});
-
-// black button
-const black: HTMLButtonElement = document.querySelector("#black")!;
-black.addEventListener("click", () => {
-  color = "black";
-});
-
-// woozy button
-const woozy: HTMLButtonElement = document.querySelector("#woozy")!;
-woozy.addEventListener("click", () => {
-  sticker_symbol = "🥴";
-  symbol = "🥴";
+function setStickerSymbol(newSymbol: string) {
+  sticker_symbol = newSymbol;
+  symbol = newSymbol;
   notify('tool-moved');
-});
+}
 
-// moai button
-const moai: HTMLButtonElement = document.querySelector("#moai")!;
-moai.addEventListener("click", () => {
-  sticker_symbol = "🗿";
-  symbol = "🗿";
-  notify('tool-moved');
-});
-
-// beer button
-const beer: HTMLButtonElement = document.querySelector("#beer")!;
-beer.addEventListener("click", () => {
-  sticker_symbol = "🍺";
-  symbol = "🍺";
-  notify('tool-moved');
-});
-
-// custom button
-const custom: HTMLButtonElement = document.querySelector("#custom")!;
-custom.addEventListener("click", () => {
-  const text = prompt("Custom sticker text","🧽");
-  sticker_symbol = text!;
-  symbol = text!;
-  notify('tool-moved');
-});
-
-// export button
-const export_button: HTMLButtonElement = document.querySelector("#export")!;
-export_button.addEventListener("click", () => {
+function exportCanvas() {
   const ex_canvas = document.createElement('canvas');
   ex_canvas.width = canvas.width * 4;
   ex_canvas.height = canvas.height * 4;
@@ -236,17 +161,51 @@ export_button.addEventListener("click", () => {
   anchor.download = "sketchpad.png";
   anchor.click();
   context = ctx;
-});
+}
 
-// rotate slider
-const rotate: HTMLInputElement = document.querySelector("#rotate")!;
-rotate.addEventListener("input", () => {
+function rotateCanvas() {
   rotation = parseInt(rotate.value);
+}
+
+// button elements
+const clear: HTMLButtonElement = document.querySelector("#clear")!;
+const undo: HTMLButtonElement = document.querySelector("#undo")!;
+const redo: HTMLButtonElement = document.querySelector("#redo")!;
+const thick: HTMLButtonElement = document.querySelector("#thick")!;
+const thin: HTMLButtonElement = document.querySelector("#thin")!;
+const red: HTMLButtonElement = document.querySelector("#red")!;
+const blue: HTMLButtonElement = document.querySelector("#blue")!;
+const green: HTMLButtonElement = document.querySelector("#green")!;
+const black: HTMLButtonElement = document.querySelector("#black")!;
+const woozy: HTMLButtonElement = document.querySelector("#woozy")!;
+const moai: HTMLButtonElement = document.querySelector("#moai")!;
+const beer: HTMLButtonElement = document.querySelector("#beer")!;
+const custom: HTMLButtonElement = document.querySelector("#custom")!;
+const export_button: HTMLButtonElement = document.querySelector("#export")!;
+const rotate: HTMLInputElement = document.querySelector("#rotate")!;
+
+// button event listeners
+clear.addEventListener("click", clearCanvas);
+undo.addEventListener("click", undoAction);
+redo.addEventListener("click", redoAction);
+thick.addEventListener("click", () => setThickness(6));
+thin.addEventListener("click", () => setThickness(3));
+red.addEventListener("click", () => setColor("red"));
+blue.addEventListener("click", () => setColor("blue"));
+green.addEventListener("click", () => setColor("green"));
+black.addEventListener("click", () => setColor("black"));
+woozy.addEventListener("click", () => setStickerSymbol("🥴"));
+moai.addEventListener("click", () => setStickerSymbol("🗿"));
+beer.addEventListener("click", () => setStickerSymbol("🍺"));
+custom.addEventListener("click", () => {
+  const text = prompt("Custom sticker text","🧽");
+  setStickerSymbol(text!);
 });
+export_button.addEventListener("click", exportCanvas);
+rotate.addEventListener("input", rotateCanvas);
 
 //Sticker Class
-class Sticker implements Displayable{
-
+class Sticker implements Displayable {
   private x: number;
   private y: number;
   private symbol: string;
@@ -261,7 +220,7 @@ class Sticker implements Displayable{
     this.rotation = rotation;
   }
 
-  public drag(x: number, y: number){
+  public drag(x: number, y: number) {
     this.x = x;
     this.y = y;
   }
@@ -275,7 +234,6 @@ class Sticker implements Displayable{
 
 //Cursor Class
 class Cursor implements Displayable {
-
   private x: number;
   private y: number;
   private symbol: string;
@@ -298,10 +256,8 @@ class Cursor implements Displayable {
   }
 }
 
-
 // Marker Class
-class Marker_line implements Displayable{
-
+class Marker_line implements Displayable {
   public line: Point[] = [];
   public marker_thickness: number;
   private color: string;
@@ -312,7 +268,7 @@ class Marker_line implements Displayable{
     this.color = color;
   }
   
-  public drag(x: number, y: number){
+  public drag(x: number, y: number) {
     this.line.push({x, y});
   }
 
@@ -323,7 +279,7 @@ class Marker_line implements Displayable{
     ctx.beginPath();
     ctx.moveTo(this.line[0].x - 4, this.line[0].y + 10);
     for (const point of this.line) {
-        ctx.lineTo(point.x - 4, point.y + 10);
+      ctx.lineTo(point.x - 4, point.y + 10);
     }
     ctx.stroke();
   }
