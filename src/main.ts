@@ -4,19 +4,19 @@ const header = document.createElement("h1");
 const APP_NAME = "Drawsome";
 const app = document.querySelector<HTMLDivElement>("#app")!;
 header.innerHTML = APP_NAME;
-app.append(header);
+app.prepend(header);
 
 //canvas setup
 const canvas: HTMLCanvasElement = document.querySelector("#canvas")!;
 const ctx = canvas.getContext("2d")!;
-ctx.clearRect(0,0, canvas.width, canvas.height);
+ctx.clearRect(0, 0, canvas.width, canvas.height);
 ctx.fillStyle = "white";
 ctx.fillRect(5, 5, 256, 256);
 canvas.style.cursor = "none";
 
 //variables
-type Point = { x: number, y: number };
-let lines: Marker_line[] = []; 
+type Point = { x: number; y: number };
+let lines: Marker_line[] = [];
 let currentLine: Marker_line | null = null;
 let redo_stack: Marker_line[] = [];
 let thickness: number = 3;
@@ -41,17 +41,29 @@ function notify(name: string) {
 //mouse down
 function handleMouseDown(event: MouseEvent) {
   currentLine = new Marker_line(event.offsetX, event.offsetY, thickness, color);
-  sticker = new Sticker(event.offsetX, event.offsetY, sticker_symbol, thickness, rotation);
+  sticker = new Sticker(
+    event.offsetX,
+    event.offsetY,
+    sticker_symbol,
+    thickness,
+    rotation
+  );
 }
 //mouse move
 function handleMouseMove(event: MouseEvent) {
-  Marker_cursor = new Cursor(event.offsetX, event.offsetY, symbol, color, rotation);
+  Marker_cursor = new Cursor(
+    event.offsetX,
+    event.offsetY,
+    symbol,
+    color,
+    rotation
+  );
   notify("tool-moved");
-  if (currentLine && event.buttons === 1){
+  if (currentLine && event.buttons === 1) {
     currentLine.drag(event.offsetX, event.offsetY);
     currentLine.display(ctx);
   }
-  if (sticker && event.buttons === 1){
+  if (sticker && event.buttons === 1) {
     sticker.drag(event.offsetX, event.offsetY);
     sticker.display(ctx);
   }
@@ -63,7 +75,7 @@ function handleMouseUp() {
   if (sticker) sticker_list.push(sticker);
   currentLine = null;
   sticker = null;
-  notify('drawing-changed');
+  notify("drawing-changed");
 }
 //mouse out
 function handleMouseOut() {
@@ -79,28 +91,34 @@ function handleMouseEnter(e: MouseEvent) {
 // redraw function: redraws lines, stickers, and cursor
 function redraw() {
   if (context) {
-    context.clearRect(0,0, canvas.width, canvas.height);
+    context.clearRect(0, 0, canvas.width, canvas.height);
     context.fillStyle = "white";
     context.fillRect(5, 5, 256, 256);
-    for(const line of lines) line.display(context);
+    for (const line of lines) line.display(context);
   }
   if (Marker_cursor) Marker_cursor.display(context);
-  sticker_list.forEach(sticker => sticker.display(context));
+  sticker_list.forEach((sticker) => sticker.display(context));
 }
 
 canvas.addEventListener("drawing-changed", redraw);
 canvas.addEventListener("tool-moved", redraw);
-canvas.addEventListener('mousedown', handleMouseDown);
-canvas.addEventListener('mousemove', handleMouseMove);
-canvas.addEventListener('mouseup', handleMouseUp);
+canvas.addEventListener("mousedown", handleMouseDown);
+canvas.addEventListener("mousemove", handleMouseMove);
+canvas.addEventListener("mouseup", handleMouseUp);
 canvas.addEventListener("mouseout", handleMouseOut);
 canvas.addEventListener("mouseenter", handleMouseEnter);
 
 //function to rotate canvas, paste sticker, then restore canvas
-function rotateText(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, angleDegrees: number) {
+function rotateText(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  x: number,
+  y: number,
+  angleDegrees: number
+) {
   ctx.save();
-  ctx.translate(x,y);
-  const angle = angleDegrees * Math.PI / 180;
+  ctx.translate(x, y);
+  const angle = (angleDegrees * Math.PI) / 180;
   ctx.rotate(angle);
   ctx.fillText(text, 0, 0);
   ctx.restore();
@@ -108,7 +126,7 @@ function rotateText(ctx: CanvasRenderingContext2D, text: string, x: number, y: n
 
 // button event handlers
 function clearCanvas() {
-  ctx.clearRect(0,0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "white";
   ctx.fillRect(5, 5, 256, 256);
   lines = [];
@@ -120,7 +138,7 @@ function undoAction() {
   if (lines.length != 0) {
     const undo_line: Marker_line = lines.pop()!;
     redo_stack.push(undo_line);
-    notify('drawing-changed');
+    notify("drawing-changed");
   }
 }
 
@@ -128,7 +146,7 @@ function redoAction() {
   if (redo_stack.length != 0) {
     const redo_line: Marker_line = redo_stack.pop()!;
     lines.push(redo_line);
-    notify('drawing-changed');
+    notify("drawing-changed");
   }
 }
 
@@ -145,17 +163,17 @@ function setColor(newColor: string) {
 function setStickerSymbol(newSymbol: string) {
   sticker_symbol = newSymbol;
   symbol = newSymbol;
-  notify('tool-moved');
+  notify("tool-moved");
 }
 
 function exportCanvas() {
-  const ex_canvas = document.createElement('canvas');
+  const ex_canvas = document.createElement("canvas");
   ex_canvas.width = canvas.width * 4;
   ex_canvas.height = canvas.height * 4;
   const ex_ctx = ex_canvas.getContext("2d");
-  ctx.scale(4,4);
+  ctx.scale(4, 4);
   context = ex_ctx!;
-  notify('drawing-changed');
+  notify("drawing-changed");
   const anchor = document.createElement("a");
   anchor.href = canvas.toDataURL("image/png");
   anchor.download = "sketchpad.png";
@@ -198,7 +216,7 @@ woozy.addEventListener("click", () => setStickerSymbol("🥴"));
 moai.addEventListener("click", () => setStickerSymbol("🗿"));
 beer.addEventListener("click", () => setStickerSymbol("🍺"));
 custom.addEventListener("click", () => {
-  const text = prompt("Custom sticker text","🧽");
+  const text = prompt("Custom sticker text", "🧽");
   setStickerSymbol(text!);
 });
 export_button.addEventListener("click", exportCanvas);
@@ -212,7 +230,13 @@ class Sticker implements Displayable {
   private sticker_thickness: number;
   private rotation: number;
 
-  constructor(x: number, y:number, symbol: string, thickness: number, rotation: number) {
+  constructor(
+    x: number,
+    y: number,
+    symbol: string,
+    thickness: number,
+    rotation: number
+  ) {
     this.x = x;
     this.y = y;
     this.symbol = symbol;
@@ -240,7 +264,13 @@ class Cursor implements Displayable {
   private color: string;
   private rotation: number;
 
-  constructor(x: number, y:number, symbol: string, color: string, rotation: number) {
+  constructor(
+    x: number,
+    y: number,
+    symbol: string,
+    color: string,
+    rotation: number
+  ) {
     this.x = x;
     this.y = y;
     this.symbol = symbol;
@@ -262,14 +292,19 @@ class Marker_line implements Displayable {
   public marker_thickness: number;
   private color: string;
 
-  constructor(init_x: number, init_y: number, _thickness: number, color: string) {
-    this.line.push({x: init_x, y: init_y});
+  constructor(
+    init_x: number,
+    init_y: number,
+    _thickness: number,
+    color: string
+  ) {
+    this.line.push({ x: init_x, y: init_y });
     this.marker_thickness = _thickness;
     this.color = color;
   }
-  
+
   public drag(x: number, y: number) {
-    this.line.push({x, y});
+    this.line.push({ x, y });
   }
 
   display(ctx: CanvasRenderingContext2D): void {
